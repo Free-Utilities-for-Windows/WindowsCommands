@@ -25,11 +25,15 @@ public class Program
         var getCPUInfoCommand = new Command("get-cpu-info", "Get CPU information");
         getCPUInfoCommand.Handler = CommandHandler.Create(CPUInformation.GetCPUInformation);
         
+        var getArpTableCommand = new Command("get-arp-table", "Get ARP table");
+        getArpTableCommand.Handler = CommandHandler.Create(ArpTable.GetArpTable);
+        
         var rootCommand = new RootCommand();
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
         rootCommand.AddCommand(getMemoryInfoCommand);
         rootCommand.AddCommand(getCPUInfoCommand);
+        rootCommand.AddCommand(getArpTableCommand);
 
         while (true)
         {
