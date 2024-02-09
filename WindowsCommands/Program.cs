@@ -28,12 +28,16 @@ public class Program
         var getArpTableCommand = new Command("get-arp-table", "Get ARP table");
         getArpTableCommand.Handler = CommandHandler.Create(ArpTable.GetArpTable);
         
+        var getDiskInfoCommand = new Command("get-disk-info", "Get disk information");
+        getDiskInfoCommand.Handler = CommandHandler.Create(DiskInfo.GetAllDiskInfo);
+        
         var rootCommand = new RootCommand();
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
         rootCommand.AddCommand(getMemoryInfoCommand);
         rootCommand.AddCommand(getCPUInfoCommand);
         rootCommand.AddCommand(getArpTableCommand);
+        rootCommand.AddCommand(getDiskInfoCommand);
 
         while (true)
         {
