@@ -13,6 +13,7 @@ public static class EventLogInfo
             {
                 try
                 {
+                    Console.WriteLine("\n-----------------------------------------");
                     Console.WriteLine("Log Name: {0}", log.Log);
                     Console.WriteLine("Record Count: {0}", log.Entries.Count);
                 }
@@ -25,8 +26,10 @@ public static class EventLogInfo
         else
         {
             EventLog log = new EventLog(logName);
+
             foreach (EventLogEntry entry in log.Entries)
             {
+                Console.WriteLine("\n-----------------------------------------");
                 Console.WriteLine("Time Created: {0}", entry.TimeGenerated);
                 Console.WriteLine("Level: {0}", entry.EntryType);
                 Console.WriteLine("Message: {0}", entry.Message);
