@@ -16,6 +16,15 @@ public class Program
         };
         getFilesCommand.Handler = CommandHandler.Create<string>(HandleGetFilesCommand);
         
+        var getEventLogCommand = new Command("get-event-log", "Get event log information")
+        {
+            new Option<string>(
+                "--log-name", 
+                getDefaultValue: () => "",
+                description: "The name of the event log to get information from.")
+        };
+        getEventLogCommand.Handler = CommandHandler.Create<string>(EventLogInfo.GetEvent);
+        
         var getSystemInfoCommand = new Command("get-system-info", "Get system information");
         getSystemInfoCommand.Handler = CommandHandler.Create(SystemInformation.GetSystemInformation);
         
@@ -42,6 +51,7 @@ public class Program
         rootCommand.AddCommand(getArpTableCommand);
         rootCommand.AddCommand(getDiskInfoCommand);
         rootCommand.AddCommand(getDriverInfoCommand);
+        rootCommand.AddCommand(getEventLogCommand);
 
         while (true)
         {
