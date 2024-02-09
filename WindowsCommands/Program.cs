@@ -31,6 +31,9 @@ public class Program
         var getDiskInfoCommand = new Command("get-disk-info", "Get disk information");
         getDiskInfoCommand.Handler = CommandHandler.Create(DiskInfo.GetAllDiskInfo);
         
+        var getDriverInfoCommand = new Command("get-driver-info", "Get driver information");
+        getDriverInfoCommand.Handler = CommandHandler.Create(DriverInfo.GetDriverInfo);
+        
         var rootCommand = new RootCommand();
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
@@ -38,6 +41,7 @@ public class Program
         rootCommand.AddCommand(getCPUInfoCommand);
         rootCommand.AddCommand(getArpTableCommand);
         rootCommand.AddCommand(getDiskInfoCommand);
+        rootCommand.AddCommand(getDriverInfoCommand);
 
         while (true)
         {
