@@ -22,10 +22,14 @@ public class Program
         var getMemoryInfoCommand = new Command("get-memory-info", "Get memory information");
         getMemoryInfoCommand.Handler = CommandHandler.Create(MemoryInformation.GetMemoryInformation);
         
+        var getCPUInfoCommand = new Command("get-cpu-info", "Get CPU information");
+        getCPUInfoCommand.Handler = CommandHandler.Create(CPUInformation.GetCPUInformation);
+        
         var rootCommand = new RootCommand();
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
         rootCommand.AddCommand(getMemoryInfoCommand);
+        rootCommand.AddCommand(getCPUInfoCommand);
 
         while (true)
         {
