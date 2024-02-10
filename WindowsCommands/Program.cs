@@ -61,6 +61,9 @@ public class Program
         var getNetworkConfigurationCommand = new Command("get-network-config", "Get network configuration");
         getNetworkConfigurationCommand.Handler = CommandHandler.Create(NetworkConfiguration.GetNetworkConfiguration);
         
+        var monitorNetworkUtilizationCommand = new Command("monitor-network-utilization", "Monitor network utilization");
+        monitorNetworkUtilizationCommand.Handler = CommandHandler.Create(NetworkUtilization.MonitorNetworkUtilization);
+        
         var rootCommand = new RootCommand();
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
@@ -74,6 +77,7 @@ public class Program
         rootCommand.AddCommand(getNetAdapterInfoCommand);
         rootCommand.AddCommand(getNetInterfaceStatsCommand);
         rootCommand.AddCommand(getNetworkConfigurationCommand);
+        rootCommand.AddCommand(monitorNetworkUtilizationCommand);
         
         while (true)
         {
