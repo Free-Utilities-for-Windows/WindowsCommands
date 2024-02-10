@@ -4,28 +4,48 @@ public static class FilesInformation
 {
     public static List<FileData> GetFiles(string path)
     {
-        var info = new DirectoryInfo(path);
-        var fileInfos = info.GetFileSystemInfos();
         var files = new List<FileData>();
-
-        foreach (var fileInfo in fileInfos)
-        {
-            var fileData = new FileData
-            {
-                Name = fileInfo.Name,
-                FullName = fileInfo.FullName,
-                Type = fileInfo is DirectoryInfo ? "Directory" : "File",
-                Size = fileInfo is FileInfo
-                    ? ((FileInfo)fileInfo).Length / 1024d / 1024d / 1024d
-                    : GetDirectorySize(fileInfo.FullName) / 1024d / 1024d / 1024d,
-                CreationTime = fileInfo.CreationTime.ToString("dd/MM/yyyy hh:mm:ss"),
-                LastAccessTime = fileInfo.LastAccessTime.ToString("dd/MM/yyyy hh:mm:ss"),
-                LastWriteTime = fileInfo.LastWriteTime.ToString("dd/MM/yyyy hh:mm:ss")
-            };
-            files.Add(fileData);
-        }
-
+        AddFilesFromDirectory(files, path);
         return files;
+    }
+
+    private static void AddFilesFromDirectory(List<FileData> files, string path)
+    {
+        var info = new DirectoryInfo(path);
+
+        foreach (var fileInfo in info.GetFileSystemInfos())
+        {
+            if (fileInfo is DirectoryInfo directoryInfo)
+            {
+                AddFilesFromDirectory(files, directoryInfo.FullName);
+
+                var fileData = new FileData
+                {
+                    Name = directoryInfo.Name,
+                    FullName = directoryInfo.FullName,
+                    Type = "Directory",
+                    Size = GetDirectorySize(directoryInfo.FullName) / 1024d / 1024d / 1024d,
+                    CreationTime = directoryInfo.CreationTime.ToString("dd/MM/yyyy hh:mm:ss"),
+                    LastAccessTime = directoryInfo.LastAccessTime.ToString("dd/MM/yyyy hh:mm:ss"),
+                    LastWriteTime = directoryInfo.LastWriteTime.ToString("dd/MM/yyyy hh:mm:ss")
+                };
+                files.Add(fileData);
+            }
+            else
+            {
+                var fileData = new FileData
+                {
+                    Name = fileInfo.Name,
+                    FullName = fileInfo.FullName,
+                    Type = "File",
+                    Size = ((FileInfo)fileInfo).Length / 1024d / 1024d / 1024d,
+                    CreationTime = fileInfo.CreationTime.ToString("dd/MM/yyyy hh:mm:ss"),
+                    LastAccessTime = fileInfo.LastAccessTime.ToString("dd/MM/yyyy hh:mm:ss"),
+                    LastWriteTime = fileInfo.LastWriteTime.ToString("dd/MM/yyyy hh:mm:ss")
+                };
+                files.Add(fileData);
+            }
+        }
     }
 
     public static long GetDirectorySize(string path)

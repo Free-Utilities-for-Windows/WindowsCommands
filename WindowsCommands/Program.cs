@@ -2,11 +2,14 @@
 using System.CommandLine.Invocation;
 using System.Text.RegularExpressions;
 using WindowsCommands;
+using WindowsCommands.Commands;
 
 public class Program
 {
     public static void Main(string[] args)
     {
+        
+        /*
         var getFilesCommand = new Command("get-files", "Get files from a specified path")
         {
             new Option<string>(
@@ -63,8 +66,12 @@ public class Program
         
         var monitorNetworkUtilizationCommand = new Command("monitor-network-utilization", "Monitor network utilization");
         monitorNetworkUtilizationCommand.Handler = CommandHandler.Create(NetworkUtilization.MonitorNetworkUtilization);
+        */
+        
         
         var rootCommand = new RootCommand();
+        
+        /*
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
         rootCommand.AddCommand(getMemoryInfoCommand);
@@ -78,6 +85,21 @@ public class Program
         rootCommand.AddCommand(getNetInterfaceStatsCommand);
         rootCommand.AddCommand(getNetworkConfigurationCommand);
         rootCommand.AddCommand(monitorNetworkUtilizationCommand);
+        */
+        
+        rootCommand.AddCommand(WinCommands.GetFilesCommand());
+        rootCommand.AddCommand(WinCommands.GetEventLogCommand());
+        rootCommand.AddCommand(WinCommands.GetNetInterfaceStatsCommand());
+        rootCommand.AddCommand(WinCommands.GetSystemInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetMemoryInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetCPUInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetDriverInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetDiskInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetIOInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetArpTableCommand());
+        rootCommand.AddCommand(WinCommands.GetNetAdapterInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetNetworkConfigurationCommand());
+        rootCommand.AddCommand(WinCommands.MonitorNetworkUtilizationCommand());
         
         while (true)
         {
@@ -94,6 +116,7 @@ public class Program
         }
     }
 
+    /*
     private static void HandleGetFilesCommand(string path)
     {
         var files = FilesInformation.GetFiles(path);
@@ -102,4 +125,5 @@ public class Program
             Console.WriteLine($"Name: {file.Name}, Full Name: {file.FullName}, Type: {file.Type}, Size: {file.Size} GB, Creation Time: {file.CreationTime}, Last Access Time: {file.LastAccessTime}, Last Write Time: {file.LastWriteTime}");
         }
     }
+    */
 }
