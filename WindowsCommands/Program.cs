@@ -43,6 +43,12 @@ public class Program
         var getDriverInfoCommand = new Command("get-driver-info", "Get driver information");
         getDriverInfoCommand.Handler = CommandHandler.Create(DriverInfo.GetDriverInfo);
         
+        var getIOInfoCommand = new Command("get-io-info", "Get IO information");
+        getIOInfoCommand.Handler = CommandHandler.Create(IOInformation.GetIOInformation);
+        
+        var getNetAdapterInfoCommand = new Command("get-net-adapter-info", "Get network adapter information");
+        getNetAdapterInfoCommand.Handler = CommandHandler.Create(NetworkAdapterInformation.GetNetworkAdapterInformation);
+        
         var rootCommand = new RootCommand();
         rootCommand.AddCommand(getFilesCommand);
         rootCommand.AddCommand(getSystemInfoCommand);
@@ -52,6 +58,8 @@ public class Program
         rootCommand.AddCommand(getDiskInfoCommand);
         rootCommand.AddCommand(getDriverInfoCommand);
         rootCommand.AddCommand(getEventLogCommand);
+        rootCommand.AddCommand(getIOInfoCommand);
+        rootCommand.AddCommand(getNetAdapterInfoCommand);
 
         while (true)
         {
