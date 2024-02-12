@@ -151,6 +151,12 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetVideoCardInfoCommand()
+    {
+        var command = new Command("get-video-card-info", "Get video card information");
+        command.Handler = CommandHandler.Create(VideoCardInformation.GetVideoCardInfo);
+        return command;
+    }
     
     private static void HandleGetFilesCommand(string path)
     {

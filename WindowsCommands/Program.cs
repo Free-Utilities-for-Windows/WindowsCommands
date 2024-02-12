@@ -28,6 +28,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetProcessPerformanceCommand());
         rootCommand.AddCommand(WinCommands.GetUserSessionCommand());
         rootCommand.AddCommand(WinCommands.GetTemperatureCommand());
+        rootCommand.AddCommand(WinCommands.GetVideoCardInfoCommand());
         
         while (true)
         {
