@@ -1,4 +1,6 @@
-﻿namespace WindowsCommands.Commands;
+﻿using System.CommandLine;
+
+namespace WindowsCommands.Commands;
 
 public static class Printer
 {
@@ -25,13 +27,49 @@ __        ___           _
 
         Console.ResetColor();
     }
-
+    
     public static void AvailableCommands()
     {
         Console.ForegroundColor = ConsoleColor.White;
-        
-        string menu = "\n1 --> Activate command\n";
-        menu += "0 --> Quit\n";
-        Console.WriteLine(menu);
+    
+        var commands = new List<Command>
+        {
+            WinCommands.GetFilesCommand(),
+            WinCommands.GetEventLogCommand(),
+            WinCommands.GetNetInterfaceStatsCommand(),
+            WinCommands.GetProcessPerformanceCommand(),
+            WinCommands.GetUserSessionCommand(),
+            WinCommands.GetWebCertificateInfoCommand(),
+            WinCommands.StartTcpServerCommand(),
+            WinCommands.StartUdpServerCommand(),
+            WinCommands.PingNetworkCommand(),
+            WinCommands.GetSystemInfoCommand(),
+            WinCommands.GetMemoryInfoCommand(),
+            WinCommands.GetCPUInfoCommand(),
+            WinCommands.GetDriverInfoCommand(),
+            WinCommands.GetDiskInfoCommand(),
+            WinCommands.GetIOInfoCommand(),
+            WinCommands.GetArpTableCommand(),
+            WinCommands.GetNetAdapterInfoCommand(),
+            WinCommands.GetNetworkConfigurationCommand(),
+            WinCommands.MonitorNetworkUtilizationCommand(),
+            WinCommands.GetTemperatureCommand(),
+            WinCommands.GetVideoCardInfoCommand(),
+            WinCommands.GetWindowsUpdateInfoCommand()
+        };
+
+        foreach (var command in commands)
+        {
+            Console.WriteLine($"Command: {command.Name}");
+            Console.WriteLine($"Description: {command.Description}");
+    
+            foreach (var option in command.Options)
+            {
+                Console.WriteLine($"Option: {option.Aliases.First()}");
+                Console.WriteLine($"Example: {command.Name} {option.Aliases.First()} <value>");
+            }
+
+            Console.WriteLine();
+        }
     }
 }

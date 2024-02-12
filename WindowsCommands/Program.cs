@@ -8,8 +8,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Printer.StartPage();
-        
         var rootCommand = new RootCommand();
         
         rootCommand.AddCommand(WinCommands.GetFilesCommand());
@@ -34,6 +32,10 @@ public class Program
         rootCommand.AddCommand(WinCommands.StartTcpServerCommand());
         rootCommand.AddCommand(WinCommands.StartUdpServerCommand());
         rootCommand.AddCommand(WinCommands.PingNetworkCommand());
+        
+        Printer.StartPage();
+        
+        Printer.AvailableCommands();
         
         while (true)
         {

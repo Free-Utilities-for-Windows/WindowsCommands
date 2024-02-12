@@ -7,7 +7,7 @@ public static class WinCommands
 {
     public static Command GetFilesCommand()
     {
-        var command = new Command("get-files", "Get files from a specified path")
+        var command = new Command("get-files", "Get files from a specified path. Example: get-files --path \"D:\\Games\\Deus Ex HRDC\"")
         {
             new Option<string>(
                 "--path", 
@@ -20,7 +20,7 @@ public static class WinCommands
     
     public static Command GetEventLogCommand()
     {
-        var command = new Command("get-event-log", "Get event log information")
+        var command = new Command("get-event-log", "Get event log information. Example: get-event-log --log-name \"System\"")
         {
             new Option<string>(
                 "--log-name", 
@@ -33,7 +33,7 @@ public static class WinCommands
     
     public static Command GetNetInterfaceStatsCommand()
     {
-        var command = new Command("get-net-interface-stats", "Get network interface statistics")
+        var command = new Command("get-net-interface-stats", "Get network interface statistics. Example: get-net-interface-stats --current false")
         {
             new Option<bool>(
                 "--current", 
@@ -46,12 +46,12 @@ public static class WinCommands
     
     public static Command GetProcessPerformanceCommand()
     {
-        var command = new Command("get-process-performance", "Get process performance information")
+        var command = new Command("get-process-performance", "Get process performance information. Example: get-process-performance --process-name \"explorer\"")
         {
             new Option<string>(
                 "--process-name", 
                 getDefaultValue: () => "explorer",
-                description: "The name of the process to get performance information from.")
+                description: "The name of the process to get performance information from")
         };
         command.Handler = CommandHandler.Create<string>(HandleGetProcessPerformanceCommand);
         return command;
@@ -59,7 +59,7 @@ public static class WinCommands
     
     public static Command GetUserSessionCommand()
     {
-        var command = new Command("get-user-session", "Get user session information")
+        var command = new Command("get-user-session", "Get user session information. Example: get-user-session --server \"localhost\" --user \"*\"")
         {
             new Option<string>(
                 "--server", 
@@ -76,11 +76,11 @@ public static class WinCommands
     
     public static Command GetWebCertificateInfoCommand()
     {
-        var command = new Command("get-web-certificate-info", "Get web certificate information")
+        var command = new Command("get-web-certificate-info", "Get web certificate information. Example: get-web-certificate-info --url \"https://yandex.ru\"")
         {
             new Option<string>(
                 "--url", 
-                getDefaultValue: () => "https://google.com",
+                getDefaultValue: () => "https://yandex.ru",
                 description: "The URL to get the certificate information from.")
         };
         command.Handler = CommandHandler.Create<string>(WebCertificateInformation.GetWebCertificateInfo);
@@ -89,12 +89,12 @@ public static class WinCommands
     
     public static Command StartTcpServerCommand()
     {
-        var command = new Command("start-tcp-server", "Start a TCP server on a specified port")
+        var command = new Command("start-tcp-server", "Start a TCP server on a specified port. Example: start-tcp-server --port 5201")
         {
             new Option<int>(
                 "--port", 
                 getDefaultValue: () => 5201,
-                description: "The port to start the server on.")
+                description: "The port to start the server on. Example: start-tcp-server --port 5201")
         };
         command.Handler = CommandHandler.Create<int>(TcpServer.StartTcpServer);
         return command;
@@ -102,7 +102,7 @@ public static class WinCommands
     
     public static Command StartUdpServerCommand()
     {
-        var command = new Command("start-udp-server", "Start a UDP server on a specified port")
+        var command = new Command("start-udp-server", "Start a UDP server on a specified port. Example: start-udp-server --port 5201")
         {
             new Option<int>(
                 "--port", 
@@ -115,7 +115,7 @@ public static class WinCommands
     
     public static Command PingNetworkCommand()
     {
-        var command = new Command("ping-network", "Ping a network")
+        var command = new Command("ping-network", "Ping a network. Example: ping-network --network \"192.168.1.0\" --timeout 100")
         {
             new Option<string>(
                 "--network", 
