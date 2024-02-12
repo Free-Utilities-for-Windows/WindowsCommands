@@ -12,6 +12,7 @@ public static class DiskInfo
             GetLogicalDiskInfo();
             GetDiskPartitionInfo();
             GetPhysicalDiskInfo();
+            GetSMARTInfo();
         }
         catch (Exception e)
         {
@@ -23,7 +24,8 @@ public static class DiskInfo
     {
         try
         {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_LogicalDisk where DriveType=3");
+            ManagementObjectSearcher searcher =
+                new ManagementObjectSearcher("select * from Win32_LogicalDisk where DriveType=3");
 
             Console.WriteLine("\n-----------------------------------------");
             Console.WriteLine("Get Logical Disk Info");
@@ -85,6 +87,63 @@ public static class DiskInfo
         catch (Exception e)
         {
             Console.WriteLine("An error occurred while getting physical disk info: " + e.Message);
+        }
+    }
+
+    public static void GetSMARTInfo()
+    {
+        try
+        {
+            var searcher = new ManagementObjectSearcher("\\\\.\\root\\Microsoft\\Windows\\Storage",
+                "SELECT * FROM MSFT_PhysicalDisk");
+
+            Console.WriteLine("\n-----------------------------------------");
+            Console.WriteLine("Get SMART Info");
+
+            foreach (ManagementObject queryObj in searcher.Get())
+            {
+                Console.WriteLine($"DiskName: {queryObj["FriendlyName"]}");
+                Console.WriteLine($"HealthStatus: {queryObj["HealthStatus"]}");
+                Console.WriteLine($"OperationalStatus: {string.Join(", ", (UInt16[])queryObj["OperationalStatus"])}");
+                Console.WriteLine($"MediaType: {queryObj["MediaType"]}");
+                Console.WriteLine($"BusType: {queryObj["BusType"]}");
+
+                var reliabilityCounter = new ManagementObjectSearcher($"\\\\.\\root\\Microsoft\\Windows\\Storage",
+                        $"SELECT * FROM MSFT_StorageReliabilityCounter WHERE DeviceId = '{queryObj["DeviceId"]}'").Get()
+                    .GetEnumerator();
+
+                if (reliabilityCounter.MoveNext())
+                {
+                    Console.WriteLine($"Temperature: {reliabilityCounter.Current["Temperature"]}");
+                    Console.WriteLine($"PowerOnHours: {reliabilityCounter.Current["PowerOnHours"]}");
+                    Console.WriteLine($"StartStopCycleCount: {reliabilityCounter.Current["StartStopCycleCount"]}");
+                    Console.WriteLine($"FlushLatencyMax: {reliabilityCounter.Current["FlushLatencyMax"]}");
+                    Console.WriteLine($"LoadUnloadCycleCount: {reliabilityCounter.Current["LoadUnloadCycleCount"]}");
+                    Console.WriteLine($"ReadErrorsTotal: {reliabilityCounter.Current["ReadErrorsTotal"]}");
+                    Console.WriteLine($"ReadErrorsCorrected: {reliabilityCounter.Current["ReadErrorsCorrected"]}");
+                    Console.WriteLine($"ReadErrorsUncorrected: {reliabilityCounter.Current["ReadErrorsUncorrected"]}");
+                    Console.WriteLine($"ReadLatencyMax: {reliabilityCounter.Current["ReadLatencyMax"]}");
+                    Console.WriteLine($"WriteErrorsTotal: {reliabilityCounter.Current["WriteErrorsTotal"]}");
+                    Console.WriteLine($"WriteErrorsCorrected: {reliabilityCounter.Current["WriteErrorsCorrected"]}");
+                    Console.WriteLine(
+                        $"WriteErrorsUncorrected: {reliabilityCounter.Current["WriteErrorsUncorrected"]}");
+                    Console.WriteLine($"WriteLatencyMax: {reliabilityCounter.Current["WriteLatencyMax"]}");
+                }
+                else
+                {
+                    Console.WriteLine("No reliability counter data available for this disk.");
+                }
+
+                Console.WriteLine("\n");
+            }
+        }
+        catch (ManagementException e)
+        {
+            Console.WriteLine("An error occurred while querying for WMI data: " + e.Message);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("An error occurred: " + e.Message);
         }
     }
 }
