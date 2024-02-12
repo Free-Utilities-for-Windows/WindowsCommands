@@ -26,6 +26,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetNetworkConfigurationCommand());
         rootCommand.AddCommand(WinCommands.MonitorNetworkUtilizationCommand());
         rootCommand.AddCommand(WinCommands.GetProcessPerformanceCommand());
+        rootCommand.AddCommand(WinCommands.GetUserSessionCommand());
         
         while (true)
         {

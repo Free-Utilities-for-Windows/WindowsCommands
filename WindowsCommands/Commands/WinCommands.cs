@@ -57,6 +57,23 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetUserSessionCommand()
+    {
+        var command = new Command("get-user-session", "Get user session information")
+        {
+            new Option<string>(
+                "--server", 
+                getDefaultValue: () => "localhost",
+                description: "The server to get user session information from."),
+            new Option<string>(
+                "--user", 
+                getDefaultValue: () => "*",
+                description: "The user to get session information for.")
+        };
+        command.Handler = CommandHandler.Create<string, string>(UserSessionQuery.GetQuery);
+        return command;
+    }
+    
     public static Command GetSystemInfoCommand()
     {
         var command = new Command("get-system-info", "Get system information");
