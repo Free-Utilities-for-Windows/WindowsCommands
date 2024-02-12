@@ -171,6 +171,13 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetWindowsUpdateInfoCommand()
+    {
+        var command = new Command("get-windows-update-info", "Get Windows update information");
+        command.Handler = CommandHandler.Create(WindowsUpdateInformation.GetWindowsUpdateInfo);
+        return command;
+    }
+    
     private static void HandleGetFilesCommand(string path)
     {
         var files = FilesInformation.GetFiles(path);

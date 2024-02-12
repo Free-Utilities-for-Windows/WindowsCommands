@@ -30,6 +30,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetTemperatureCommand());
         rootCommand.AddCommand(WinCommands.GetVideoCardInfoCommand());
         rootCommand.AddCommand(WinCommands.GetWebCertificateInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetWindowsUpdateInfoCommand());
         
         while (true)
         {
