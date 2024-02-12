@@ -113,6 +113,23 @@ public static class WinCommands
         return command;
     }
     
+    public static Command PingNetworkCommand()
+    {
+        var command = new Command("ping-network", "Ping a network")
+        {
+            new Option<string>(
+                "--network", 
+                getDefaultValue: () => "192.168.1.0",
+                description: "The network to ping."),
+            new Option<int>(
+                "--timeout", 
+                getDefaultValue: () => 100,
+                description: "The timeout for each ping in milliseconds.")
+        };
+        command.Handler = CommandHandler.Create<string, int>(NetworkPing.PingNetwork);
+        return command;
+    }
+    
     public static Command GetSystemInfoCommand()
     {
         var command = new Command("get-system-info", "Get system information");

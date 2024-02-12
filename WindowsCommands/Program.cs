@@ -33,6 +33,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetWindowsUpdateInfoCommand());
         rootCommand.AddCommand(WinCommands.StartTcpServerCommand());
         rootCommand.AddCommand(WinCommands.StartUdpServerCommand());
+        rootCommand.AddCommand(WinCommands.PingNetworkCommand());
         
         while (true)
         {
