@@ -29,6 +29,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetUserSessionCommand());
         rootCommand.AddCommand(WinCommands.GetTemperatureCommand());
         rootCommand.AddCommand(WinCommands.GetVideoCardInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetWebCertificateInfoCommand());
         
         while (true)
         {

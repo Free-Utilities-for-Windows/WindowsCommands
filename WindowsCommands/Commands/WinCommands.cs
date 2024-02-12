@@ -74,6 +74,19 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetWebCertificateInfoCommand()
+    {
+        var command = new Command("get-web-certificate-info", "Get web certificate information")
+        {
+            new Option<string>(
+                "--url", 
+                getDefaultValue: () => "https://google.com",
+                description: "The URL to get the certificate information from.")
+        };
+        command.Handler = CommandHandler.Create<string>(WebCertificateInformation.GetWebCertificateInfo);
+        return command;
+    }
+    
     public static Command GetSystemInfoCommand()
     {
         var command = new Command("get-system-info", "Get system information");
