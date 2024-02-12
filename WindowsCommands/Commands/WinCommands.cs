@@ -74,6 +74,19 @@ public static class WinCommands
         return command;
     }
     
+    public static Command StartTcpServerCommand()
+    {
+        var command = new Command("start-tcp-server", "Start a TCP server on a specified port")
+        {
+            new Option<int>(
+                "--port", 
+                getDefaultValue: () => 5201,
+                description: "The port to start the server on.")
+        };
+        command.Handler = CommandHandler.Create<int>(TcpServer.StartTcpServer);
+        return command;
+    }
+    
     public static Command GetWebCertificateInfoCommand()
     {
         var command = new Command("get-web-certificate-info", "Get web certificate information")

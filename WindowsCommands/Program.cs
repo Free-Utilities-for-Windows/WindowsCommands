@@ -31,6 +31,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetVideoCardInfoCommand());
         rootCommand.AddCommand(WinCommands.GetWebCertificateInfoCommand());
         rootCommand.AddCommand(WinCommands.GetWindowsUpdateInfoCommand());
+        rootCommand.AddCommand(WinCommands.StartTcpServerCommand());
         
         while (true)
         {
