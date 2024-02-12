@@ -144,6 +144,13 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetTemperatureCommand()
+    {
+        var command = new Command("get-temperature", "Get system temperature information");
+        command.Handler = CommandHandler.Create(TemperatureInfo.GetTemperature);
+        return command;
+    }
+    
     
     private static void HandleGetFilesCommand(string path)
     {

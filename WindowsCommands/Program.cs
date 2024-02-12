@@ -27,6 +27,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.MonitorNetworkUtilizationCommand());
         rootCommand.AddCommand(WinCommands.GetProcessPerformanceCommand());
         rootCommand.AddCommand(WinCommands.GetUserSessionCommand());
+        rootCommand.AddCommand(WinCommands.GetTemperatureCommand());
         
         while (true)
         {
