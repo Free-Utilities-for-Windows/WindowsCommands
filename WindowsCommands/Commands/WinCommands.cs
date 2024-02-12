@@ -44,6 +44,19 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetProcessPerformanceCommand()
+    {
+        var command = new Command("get-process-performance", "Get process performance information")
+        {
+            new Option<string>(
+                "--process-name", 
+                getDefaultValue: () => "explorer",
+                description: "The name of the process to get performance information from.")
+        };
+        command.Handler = CommandHandler.Create<string>(HandleGetProcessPerformanceCommand);
+        return command;
+    }
+    
     public static Command GetSystemInfoCommand()
     {
         var command = new Command("get-system-info", "Get system information");
@@ -121,6 +134,16 @@ public static class WinCommands
         foreach (var file in files)
         {
             Console.WriteLine($"Name: {file.Name}, Full Name: {file.FullName}, Type: {file.Type}, Size: {file.Size} GB, Creation Time: {file.CreationTime}, Last Access Time: {file.LastAccessTime}, Last Write Time: {file.LastWriteTime}");
+        }
+    }
+    
+    private static void HandleGetProcessPerformanceCommand(string processName)
+    {
+        var collector = new ProcessPerformanceCollector();
+        var performances = collector.GetProcessPerformance(processName);
+        foreach (var performance in performances)
+        {
+            Console.WriteLine($"Name: {performance.Name}, ProcTime: {performance.ProcTime}, IOps: {performance.IOps}, IObsRead: {performance.IObsRead}, IObsWrite: {performance.IObsWrite}, RunTime: {performance.RunTime}, TotalTime: {performance.TotalTime}, UserTime: {performance.UserTime}, PrivTime: {performance.PrivTime}, WorkingSet: {performance.WorkingSet}, PeakWorkingSet: {performance.PeakWorkingSet}, PageMemory: {performance.PageMemory}, Threads: {performance.Threads}, Handles: {performance.Handles}");
         }
     }
 }
