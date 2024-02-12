@@ -74,6 +74,19 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetWebCertificateInfoCommand()
+    {
+        var command = new Command("get-web-certificate-info", "Get web certificate information")
+        {
+            new Option<string>(
+                "--url", 
+                getDefaultValue: () => "https://google.com",
+                description: "The URL to get the certificate information from.")
+        };
+        command.Handler = CommandHandler.Create<string>(WebCertificateInformation.GetWebCertificateInfo);
+        return command;
+    }
+    
     public static Command StartTcpServerCommand()
     {
         var command = new Command("start-tcp-server", "Start a TCP server on a specified port")
@@ -87,16 +100,16 @@ public static class WinCommands
         return command;
     }
     
-    public static Command GetWebCertificateInfoCommand()
+    public static Command StartUdpServerCommand()
     {
-        var command = new Command("get-web-certificate-info", "Get web certificate information")
+        var command = new Command("start-udp-server", "Start a UDP server on a specified port")
         {
-            new Option<string>(
-                "--url", 
-                getDefaultValue: () => "https://google.com",
-                description: "The URL to get the certificate information from.")
+            new Option<int>(
+                "--port", 
+                getDefaultValue: () => 5201,
+                description: "The port to start the server on.")
         };
-        command.Handler = CommandHandler.Create<string>(WebCertificateInformation.GetWebCertificateInfo);
+        command.Handler = CommandHandler.Create<int>(UdpServer.StartUdpServer);
         return command;
     }
     
