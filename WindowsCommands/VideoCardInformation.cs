@@ -16,7 +16,7 @@ public static class VideoCardInformation
                 var videoCardInfo = new VideoCardInfo();
                 videoCardInfo.Model = queryObj["Name"].ToString();
                 videoCardInfo.Display = queryObj["CurrentHorizontalResolution"] + "x" + queryObj["CurrentVerticalResolution"];
-                videoCardInfo.VideoRAM = (Convert.ToUInt64(queryObj["AdapterRAM"]) / (1024 * 1024 * 1024)) + " Gb";
+                videoCardInfo.VideoRAM = (Convert.ToUInt64(queryObj["AdapterRAM"]) / (1024 * 1024)) + " MB";
                 videoCardInfos.Add(videoCardInfo);
             }
 
