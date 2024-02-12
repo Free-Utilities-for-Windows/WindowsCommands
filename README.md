@@ -39,7 +39,7 @@ Many commands come with its own set of options that allow you to customize the c
 3. Run the utility as a command-line argument. For example:
 
     ```
-    .\WindowsCommands.exe.exe
+    .\WindowsCommands.exe
     ```
 4. When you start the application, you'll see a title and an available commands.
 
