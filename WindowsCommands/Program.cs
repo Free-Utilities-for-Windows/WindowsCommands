@@ -32,6 +32,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.StartTcpServerCommand());
         rootCommand.AddCommand(WinCommands.StartUdpServerCommand());
         rootCommand.AddCommand(WinCommands.PingNetworkCommand());
+        rootCommand.AddCommand(WinCommands.GetBatteryInfoCommand());
         
         Printer.StartPage();
         

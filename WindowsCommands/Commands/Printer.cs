@@ -55,7 +55,8 @@ __        ___           _
             WinCommands.MonitorNetworkUtilizationCommand(),
             WinCommands.GetTemperatureCommand(),
             WinCommands.GetVideoCardInfoCommand(),
-            WinCommands.GetWindowsUpdateInfoCommand()
+            WinCommands.GetWindowsUpdateInfoCommand(),
+            WinCommands.GetBatteryInfoCommand()
         };
 
         foreach (var command in commands)

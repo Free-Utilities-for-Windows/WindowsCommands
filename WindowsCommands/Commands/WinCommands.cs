@@ -221,6 +221,13 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetBatteryInfoCommand()
+    {
+        var command = new Command("get-battery-info", "Get Battery information");
+        command.Handler = CommandHandler.Create(Battery.GetBatteryInfo);
+        return command;
+    }
+    
     private static void HandleGetFilesCommand(string path)
     {
         var files = FilesInformation.GetFiles(path);
