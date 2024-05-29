@@ -29,6 +29,7 @@ The application currently supports the following commands:
 - Get temperature
 - Get video card info
 - Get Windows update info
+- Get Battery information
 
 Many commands come with its own set of options that allow you to customize the command's behavior.
 
