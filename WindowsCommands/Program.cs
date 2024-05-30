@@ -10,6 +10,7 @@ public class Program
     {
         var rootCommand = new RootCommand();
         
+        rootCommand.AddCommand(WinCommands.GetDrivesCommand());
         rootCommand.AddCommand(WinCommands.GetFilesCommand());
         rootCommand.AddCommand(WinCommands.GetEventLogCommand());
         rootCommand.AddCommand(WinCommands.GetNetInterfaceStatsCommand());

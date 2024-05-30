@@ -34,6 +34,7 @@ __        ___           _
     
         var commands = new List<Command>
         {
+            WinCommands.GetDrivesCommand(),
             WinCommands.GetFilesCommand(),
             WinCommands.GetEventLogCommand(),
             WinCommands.GetNetInterfaceStatsCommand(),

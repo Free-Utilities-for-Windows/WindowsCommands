@@ -5,6 +5,19 @@ namespace WindowsCommands.Commands;
 
 public static class WinCommands
 {
+    public static Command GetDrivesCommand()
+    {
+        var command = new Command("get-drives", "Get information about all physical drives. If a device ID is provided, get information about logical drives of the specified physical drive. Example: get-drives --device-id \"\\\\.\\PHYSICALDRIVE0\"")
+        {
+            new Option<string>(
+                "--device-id",
+                getDefaultValue: () => "",
+                description: "The device ID of the physical drive to get logical drives from."),
+        };
+        command.Handler = CommandHandler.Create<string>(HandleGetDrivesCommand);
+        return command;
+    }
+    
     public static Command GetFilesCommand()
     {
         var command = new Command("get-files", "Get files from a specified path. Example: get-files --path \"D:\\Games\\Deus Ex HRDC\"")
@@ -244,6 +257,18 @@ public static class WinCommands
         foreach (var performance in performances)
         {
             Console.WriteLine($"Name: {performance.Name}, ProcTime: {performance.ProcTime}, IOps: {performance.IOps}, IObsRead: {performance.IObsRead}, IObsWrite: {performance.IObsWrite}, RunTime: {performance.RunTime}, TotalTime: {performance.TotalTime}, UserTime: {performance.UserTime}, PrivTime: {performance.PrivTime}, WorkingSet: {performance.WorkingSet}, PeakWorkingSet: {performance.PeakWorkingSet}, PageMemory: {performance.PageMemory}, Threads: {performance.Threads}, Handles: {performance.Handles}");
+        }
+    }
+    
+    private static void HandleGetDrivesCommand(string deviceId)
+    {
+        if (string.IsNullOrEmpty(deviceId))
+        {
+            DiskExplorer.GetDrives();
+        }
+        else
+        {
+            DiskExplorer.GetLogicalDrives(deviceId);
         }
     }
 }
