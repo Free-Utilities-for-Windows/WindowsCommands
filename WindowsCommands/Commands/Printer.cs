@@ -57,7 +57,9 @@ __        ___           _
             WinCommands.GetTemperatureCommand(),
             WinCommands.GetVideoCardInfoCommand(),
             WinCommands.GetWindowsUpdateInfoCommand(),
-            WinCommands.GetBatteryInfoCommand()
+            WinCommands.GetBatteryInfoCommand(),
+            WinCommands.CleanOldTempFilesCommand(),
+            WinCommands.DownloadImagesCommand()
         };
 
         foreach (var command in commands)
@@ -68,7 +70,6 @@ __        ___           _
             foreach (var option in command.Options)
             {
                 Console.WriteLine($"Option: {option.Aliases.First()}");
-                Console.WriteLine($"Example: {command.Name} {option.Aliases.First()} <value>");
             }
 
             Console.WriteLine();

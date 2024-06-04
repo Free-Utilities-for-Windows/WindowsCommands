@@ -34,6 +34,8 @@ public class Program
         rootCommand.AddCommand(WinCommands.StartUdpServerCommand());
         rootCommand.AddCommand(WinCommands.PingNetworkCommand());
         rootCommand.AddCommand(WinCommands.GetBatteryInfoCommand());
+        rootCommand.AddCommand(WinCommands.CleanOldTempFilesCommand());
+        rootCommand.AddCommand(WinCommands.DownloadImagesCommand());
         
         Printer.StartPage();
         

@@ -5,6 +5,18 @@ namespace WindowsCommands.Commands;
 
 public static class WinCommands
 {
+    public static Command DownloadImagesCommand()
+    {
+        var command = new Command("download-images", "Download all images from a specified URL. Example: download-images --url \"https://habr.com/ru/articles/818907/\"")
+        {
+            new Option<string>(
+                "--url", 
+                getDefaultValue: () => "",
+                description: "The URL to download images from.")
+        };
+        command.Handler = CommandHandler.Create<string>(HandleDownloadImagesCommand);
+        return command;
+    }
     public static Command GetDrivesCommand()
     {
         var command = new Command("get-drives", "Get information about all physical drives. If a device ID is provided, get information about logical drives of the specified physical drive. Example: get-drives --device-id \"\\\\.\\PHYSICALDRIVE0\"")
@@ -241,6 +253,13 @@ public static class WinCommands
         return command;
     }
     
+    public static Command CleanOldTempFilesCommand()
+    {
+        var command = new Command("clean-old-temp-files", "Clean old temporary files that have not been modified in the last 30 days.");
+        command.Handler = CommandHandler.Create(TempFileCleaner.CleanOldTempFiles);
+        return command;
+    }
+    
     private static void HandleGetFilesCommand(string path)
     {
         var files = FilesInformation.GetFiles(path);
@@ -270,5 +289,10 @@ public static class WinCommands
         {
             DiskExplorer.GetLogicalDrives(deviceId);
         }
+    }
+    
+    private static void HandleDownloadImagesCommand(string url)
+    {
+        Task.Run(() => ImageDownloader.DownloadImages(url));
     }
 }
