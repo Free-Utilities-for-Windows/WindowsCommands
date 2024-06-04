@@ -8,6 +8,8 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        ConsoleOutputSaver.Initialize();
+        
         var rootCommand = new RootCommand();
         
         rootCommand.AddCommand(WinCommands.GetFilesCommand());
@@ -54,6 +56,7 @@ public class Program
                 .ToArray();
 
             rootCommand.InvokeAsync(inputArgs).Wait();
+            ConsoleOutputSaver.SaveOutput(input);
         }
     }
 }

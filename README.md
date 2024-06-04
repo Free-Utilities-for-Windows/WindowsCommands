@@ -27,12 +27,15 @@ The application currently supports the following commands:
 - Get network adapter info
 - Get network configuration
 - Monitor network utilization
-- Get temperature
+- Get temperature ***
 - Get video card info
 - Get Windows update info
 - Get Battery information
 - Clean old temporary files
-- Download images from a specified URL
+- Download images from a specified URL **
+
+** The `Download images from a specified URL` command saves the images to the `My Pictures` folder.
+*** The `Get temperature` command may not work on many systems due to the hardware support
 
 Many commands come with its own set of options that allow you to customize the command's behavior.
 
