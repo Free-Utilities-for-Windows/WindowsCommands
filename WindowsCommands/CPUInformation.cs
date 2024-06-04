@@ -6,26 +6,31 @@ public static class CPUInformation
 {
     public static void GetCPUInformation()
     {
-        try
+        for (int i = 0; i < 10; i++)
         {
-            var searcher = new ManagementObjectSearcher("select * from Win32_PerfFormattedData_PerfOS_Processor");
-
-            var values = GetValues(searcher);
-
-            foreach (var key in values.Keys)
+            try
             {
-                Console.WriteLine("Name: {0}", key);
-                Console.WriteLine("ProcessorTime: {0} %", values[key]["PercentProcessorTime"]);
-                Console.WriteLine("PrivilegedTime: {0} %", values[key]["PercentPrivilegedTime"]);
-                Console.WriteLine("UserTime: {0} %", values[key]["PercentUserTime"]);
-                Console.WriteLine("InterruptTime: {0} %", values[key]["PercentInterruptTime"]);
-                Console.WriteLine("IdleTime: {0} %", values[key]["PercentIdleTime"]);
-                Console.WriteLine();
+                var searcher = new ManagementObjectSearcher("select * from Win32_PerfFormattedData_PerfOS_Processor");
+
+                var values = GetValues(searcher);
+
+                foreach (var key in values.Keys)
+                {
+                    Console.WriteLine("Name: {0}", key);
+                    Console.WriteLine("ProcessorTime: {0} %", values[key]["PercentProcessorTime"]);
+                    Console.WriteLine("PrivilegedTime: {0} %", values[key]["PercentPrivilegedTime"]);
+                    Console.WriteLine("UserTime: {0} %", values[key]["PercentUserTime"]);
+                    Console.WriteLine("InterruptTime: {0} %", values[key]["PercentInterruptTime"]);
+                    Console.WriteLine("IdleTime: {0} %", values[key]["PercentIdleTime"]);
+                    Console.WriteLine();
+                }
             }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("An error occurred: " + e.Message);
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: " + e.Message);
+            }
+
+            System.Threading.Thread.Sleep(1000);
         }
     }
 

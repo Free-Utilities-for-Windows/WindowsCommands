@@ -16,6 +16,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetNetInterfaceStatsCommand());
         rootCommand.AddCommand(WinCommands.GetSystemInfoCommand());
         rootCommand.AddCommand(WinCommands.GetMemoryInfoCommand());
+        rootCommand.AddCommand(WinCommands.GetMemorySlotsCommand());
         rootCommand.AddCommand(WinCommands.GetCPUInfoCommand());
         rootCommand.AddCommand(WinCommands.GetDriverInfoCommand());
         rootCommand.AddCommand(WinCommands.GetDiskInfoCommand());

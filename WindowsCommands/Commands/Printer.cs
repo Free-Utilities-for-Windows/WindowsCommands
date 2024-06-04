@@ -46,6 +46,7 @@ __        ___           _
             WinCommands.PingNetworkCommand(),
             WinCommands.GetSystemInfoCommand(),
             WinCommands.GetMemoryInfoCommand(),
+            WinCommands.GetMemorySlotsCommand(),
             WinCommands.GetCPUInfoCommand(),
             WinCommands.GetDriverInfoCommand(),
             WinCommands.GetDiskInfoCommand(),

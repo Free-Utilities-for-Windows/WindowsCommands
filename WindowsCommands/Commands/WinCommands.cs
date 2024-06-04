@@ -253,6 +253,13 @@ public static class WinCommands
         return command;
     }
     
+    public static Command GetMemorySlotsCommand()
+    {
+        var command = new Command("get-memory-slots", "Get information about all memory slots");
+        command.Handler = CommandHandler.Create(() => MemorySlotInfo.PrintMemorySlots());
+        return command;
+    }
+
     public static Command CleanOldTempFilesCommand()
     {
         var command = new Command("clean-old-temp-files", "Clean old temporary files that have not been modified in the last 30 days.");
