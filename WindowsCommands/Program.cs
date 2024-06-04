@@ -10,10 +10,16 @@ public class Program
     {
         var rootCommand = new RootCommand();
         
-        rootCommand.AddCommand(WinCommands.GetDrivesCommand());
         rootCommand.AddCommand(WinCommands.GetFilesCommand());
         rootCommand.AddCommand(WinCommands.GetEventLogCommand());
+        rootCommand.AddCommand(WinCommands.GetDrivesCommand());
         rootCommand.AddCommand(WinCommands.GetNetInterfaceStatsCommand());
+        rootCommand.AddCommand(WinCommands.GetProcessPerformanceCommand());
+        rootCommand.AddCommand(WinCommands.GetUserSessionCommand());
+        rootCommand.AddCommand(WinCommands.GetWebCertificateInfoCommand());
+        rootCommand.AddCommand(WinCommands.StartTcpServerCommand());
+        rootCommand.AddCommand(WinCommands.StartUdpServerCommand());
+        rootCommand.AddCommand(WinCommands.PingNetworkCommand());
         rootCommand.AddCommand(WinCommands.GetSystemInfoCommand());
         rootCommand.AddCommand(WinCommands.GetMemoryInfoCommand());
         rootCommand.AddCommand(WinCommands.GetMemorySlotsCommand());
@@ -24,17 +30,11 @@ public class Program
         rootCommand.AddCommand(WinCommands.GetArpTableCommand());
         rootCommand.AddCommand(WinCommands.GetNetAdapterInfoCommand());
         rootCommand.AddCommand(WinCommands.GetNetworkConfigurationCommand());
-        rootCommand.AddCommand(WinCommands.MonitorNetworkUtilizationCommand());
-        rootCommand.AddCommand(WinCommands.GetProcessPerformanceCommand());
-        rootCommand.AddCommand(WinCommands.GetUserSessionCommand());
         rootCommand.AddCommand(WinCommands.GetTemperatureCommand());
         rootCommand.AddCommand(WinCommands.GetVideoCardInfoCommand());
-        rootCommand.AddCommand(WinCommands.GetWebCertificateInfoCommand());
         rootCommand.AddCommand(WinCommands.GetWindowsUpdateInfoCommand());
-        rootCommand.AddCommand(WinCommands.StartTcpServerCommand());
-        rootCommand.AddCommand(WinCommands.StartUdpServerCommand());
-        rootCommand.AddCommand(WinCommands.PingNetworkCommand());
         rootCommand.AddCommand(WinCommands.GetBatteryInfoCommand());
+        rootCommand.AddCommand(WinCommands.MonitorNetworkUtilizationCommand());
         rootCommand.AddCommand(WinCommands.CleanOldTempFilesCommand());
         rootCommand.AddCommand(WinCommands.DownloadImagesCommand());
         

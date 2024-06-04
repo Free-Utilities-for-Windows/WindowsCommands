@@ -34,9 +34,9 @@ __        ___           _
     
         var commands = new List<Command>
         {
-            WinCommands.GetDrivesCommand(),
             WinCommands.GetFilesCommand(),
             WinCommands.GetEventLogCommand(),
+            WinCommands.GetDrivesCommand(),
             WinCommands.GetNetInterfaceStatsCommand(),
             WinCommands.GetProcessPerformanceCommand(),
             WinCommands.GetUserSessionCommand(),
@@ -54,11 +54,11 @@ __        ___           _
             WinCommands.GetArpTableCommand(),
             WinCommands.GetNetAdapterInfoCommand(),
             WinCommands.GetNetworkConfigurationCommand(),
-            WinCommands.MonitorNetworkUtilizationCommand(),
             WinCommands.GetTemperatureCommand(),
             WinCommands.GetVideoCardInfoCommand(),
             WinCommands.GetWindowsUpdateInfoCommand(),
             WinCommands.GetBatteryInfoCommand(),
+            WinCommands.MonitorNetworkUtilizationCommand(),
             WinCommands.CleanOldTempFilesCommand(),
             WinCommands.DownloadImagesCommand()
         };

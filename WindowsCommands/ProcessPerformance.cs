@@ -6,24 +6,6 @@ using System.Management;
 
 namespace WindowsCommands;
 
-public class ProcessPerformance
-{
-    public string Name { get; set; }
-    public double ProcTime { get; set; }
-    public long IOps { get; set; }
-    public double IObsRead { get; set; }
-    public double IObsWrite { get; set; }
-    public TimeSpan RunTime { get; set; }
-    public TimeSpan TotalTime { get; set; }
-    public TimeSpan UserTime { get; set; }
-    public TimeSpan PrivTime { get; set; }
-    public double WorkingSet { get; set; }
-    public double PeakWorkingSet { get; set; }
-    public double PageMemory { get; set; }
-    public int Threads { get; set; }
-    public int Handles { get; set; }
-}
-
 public class ProcessPerformanceCollector
 {
     public List<ProcessPerformance> GetProcessPerformance(string processName = null)
@@ -76,5 +58,23 @@ public class ProcessPerformanceCollector
 
         return performances.OrderByDescending(p => p.ProcTime).ThenByDescending(p => p.IOps)
             .ThenByDescending(p => p.TotalTime.TotalMilliseconds).ToList();
+    }
+    
+    public class ProcessPerformance
+    {
+        public string Name { get; set; }
+        public double ProcTime { get; set; }
+        public long IOps { get; set; }
+        public double IObsRead { get; set; }
+        public double IObsWrite { get; set; }
+        public TimeSpan RunTime { get; set; }
+        public TimeSpan TotalTime { get; set; }
+        public TimeSpan UserTime { get; set; }
+        public TimeSpan PrivTime { get; set; }
+        public double WorkingSet { get; set; }
+        public double PeakWorkingSet { get; set; }
+        public double PageMemory { get; set; }
+        public int Threads { get; set; }
+        public int Handles { get; set; }
     }
 }

@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace WindowsCommands;
 
-public class NetworkUtilization
+public static class NetworkUtilization
 {
     private const float WarningThreshold = 25;
     private const float CriticalThreshold = 50;
@@ -51,17 +51,14 @@ public class NetworkUtilization
                 if (networkUtilization > CriticalThreshold)
                 {
                     Console.WriteLine($"CRITICAL: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s");
-                    // Environment.Exit(2);
                 }
                 else if (networkUtilization > WarningThreshold)
                 {
                     Console.WriteLine($"WARNING: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s");
-                    // Environment.Exit(1);
                 }
                 else
                 {
                     Console.WriteLine($"OK: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s");
-                    // Environment.Exit(0);
                 }
 
                 Console.WriteLine();
@@ -70,7 +67,6 @@ public class NetworkUtilization
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
-            // Environment.Exit(3);
         }
     }
 }

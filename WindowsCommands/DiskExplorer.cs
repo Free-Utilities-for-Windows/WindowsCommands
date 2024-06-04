@@ -4,48 +4,6 @@ namespace WindowsCommands;
 
 public static class DiskExplorer
 {
-    public class LogicalDrive
-    {
-        public static ulong OneGb = 1024 * 1024 * 1024;
-
-        public string DirectoryRoot { get; }
-        public string PartitionID { get; }
-        public ulong PartitionSizeBytes { get; }
-        public bool IsBootable { get; }
-
-        public string SizeGbText => ((double)PartitionSizeBytes / OneGb).ToString("###,###,###.##");
-
-        public LogicalDrive(string directoryRoot, string partitionID, ulong partitionSizeBytes, bool isBootable)
-        {
-            DirectoryRoot = directoryRoot;
-            PartitionID = partitionID;
-            PartitionSizeBytes = partitionSizeBytes;
-            IsBootable = isBootable;
-        }
-    }
-
-    public class PhysicalDrive
-    {
-        public static ulong OneGb = 1024 * 1024 * 1024;
-
-        public string ID { get; }
-        public string Name { get; }
-        public string InterfaceType { get; }
-        public string MediaType { get; }
-        public ulong SizeBytes { get; }
-
-        public string SizeGbText => ((double)SizeBytes / OneGb).ToString("###,###,###.##");
-
-        public PhysicalDrive(string id, string name, ulong sizeBytes, string mediaType, string interfaceType)
-        {
-            ID = id;
-            Name = name;
-            InterfaceType = interfaceType;
-            MediaType = mediaType;
-            SizeBytes = sizeBytes;
-        }
-    }
-
     public static void GetDrives()
     {
         const string query = "Select DeviceID, Caption, InterfaceType, MediaType, Size FROM Win32_DiskDrive";
@@ -91,6 +49,48 @@ public static class DiskExplorer
             var logicalDrive = new LogicalDrive(directoryRoot, partitionID, size, isBootable);
             Console.WriteLine(
                 $"DirectoryRoot: {logicalDrive.DirectoryRoot}, PartitionID: {logicalDrive.PartitionID}, Size: {logicalDrive.SizeGbText} GB, IsBootable: {logicalDrive.IsBootable}");
+        }
+    }
+
+    public class LogicalDrive
+    {
+        public static ulong OneGb = 1024 * 1024 * 1024;
+
+        public string DirectoryRoot { get; }
+        public string PartitionID { get; }
+        public ulong PartitionSizeBytes { get; }
+        public bool IsBootable { get; }
+
+        public string SizeGbText => ((double)PartitionSizeBytes / OneGb).ToString("###,###,###.##");
+
+        public LogicalDrive(string directoryRoot, string partitionID, ulong partitionSizeBytes, bool isBootable)
+        {
+            DirectoryRoot = directoryRoot;
+            PartitionID = partitionID;
+            PartitionSizeBytes = partitionSizeBytes;
+            IsBootable = isBootable;
+        }
+    }
+
+    public class PhysicalDrive
+    {
+        public static ulong OneGb = 1024 * 1024 * 1024;
+
+        public string ID { get; }
+        public string Name { get; }
+        public string InterfaceType { get; }
+        public string MediaType { get; }
+        public ulong SizeBytes { get; }
+
+        public string SizeGbText => ((double)SizeBytes / OneGb).ToString("###,###,###.##");
+
+        public PhysicalDrive(string id, string name, ulong sizeBytes, string mediaType, string interfaceType)
+        {
+            ID = id;
+            Name = name;
+            InterfaceType = interfaceType;
+            MediaType = mediaType;
+            SizeBytes = sizeBytes;
         }
     }
 }

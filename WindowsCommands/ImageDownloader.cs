@@ -7,7 +7,7 @@ public static class ImageDownloader
     public static async Task DownloadImages(string url)
     {
         var _httpClient = new HttpClient();
-    
+
         var web = new HtmlWeb();
         var doc = await web.LoadFromWebAsync(url);
 

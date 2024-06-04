@@ -18,9 +18,12 @@ public static class IOInformation
                 Console.WriteLine("WriteTime: {0} %", obj["PercentDiskWriteTime"]);
                 Console.WriteLine("IdleTime: {0} %", obj["PercentIdleTime"]);
                 Console.WriteLine("QueueLength: {0}", obj["CurrentDiskQueueLength"]);
-                Console.WriteLine("BytesPersec: {0} MByte/Sec", (Convert.ToDouble(obj["DiskBytesPersec"]) / 1024 / 1024).ToString("0.000"));
-                Console.WriteLine("ReadBytesPersec: {0} MByte/Sec", (Convert.ToDouble(obj["DiskReadBytesPersec"]) / 1024 / 1024).ToString("0.000"));
-                Console.WriteLine("WriteBytesPersec: {0} MByte/Sec", (Convert.ToDouble(obj["DiskWriteBytesPersec"]) / 1024 / 1024).ToString("0.000"));
+                Console.WriteLine("BytesPersec: {0} MByte/Sec",
+                    (Convert.ToDouble(obj["DiskBytesPersec"]) / 1024 / 1024).ToString("0.000"));
+                Console.WriteLine("ReadBytesPersec: {0} MByte/Sec",
+                    (Convert.ToDouble(obj["DiskReadBytesPersec"]) / 1024 / 1024).ToString("0.000"));
+                Console.WriteLine("WriteBytesPersec: {0} MByte/Sec",
+                    (Convert.ToDouble(obj["DiskWriteBytesPersec"]) / 1024 / 1024).ToString("0.000"));
                 Console.WriteLine("IOps: {0}", obj["DiskTransfersPersec"]);
                 Console.WriteLine("ReadsIOps: {0}", obj["DiskReadsPersec"]);
                 Console.WriteLine("WriteIOps: {0}", obj["DiskWritesPersec"]);

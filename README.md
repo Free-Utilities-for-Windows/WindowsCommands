@@ -18,6 +18,7 @@ The application currently supports the following commands:
 - Ping network
 - Get system info
 - Get memory info
+- Get memory slots info
 - Get CPU info
 - Get driver info
 - Get disk info
@@ -30,6 +31,8 @@ The application currently supports the following commands:
 - Get video card info
 - Get Windows update info
 - Get Battery information
+- Clean old temporary files
+- Download images from a specified URL
 
 Many commands come with its own set of options that allow you to customize the command's behavior.
 

@@ -5,16 +5,6 @@ using System.Linq;
 
 namespace WindowsCommands;
 
-public class UserSession
-{
-    public string User { get; set; }
-    public string Session { get; set; }
-    public string ID { get; set; }
-    public string Status { get; set; }
-    public string IdleTime { get; set; }
-    public string LogonTime { get; set; }
-}
-
 public static class UserSessionQuery
 {
     public static async Task GetQuery(string srv = "localhost", string user = "*")
@@ -76,5 +66,15 @@ public static class UserSessionQuery
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
         }
+    }
+
+    public class UserSession
+    {
+        public string User { get; set; }
+        public string Session { get; set; }
+        public string ID { get; set; }
+        public string Status { get; set; }
+        public string IdleTime { get; set; }
+        public string LogonTime { get; set; }
     }
 }
