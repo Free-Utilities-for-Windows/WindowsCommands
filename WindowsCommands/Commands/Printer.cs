@@ -60,7 +60,11 @@ __        ___           _
             WinCommands.GetBatteryInfoCommand(),
             WinCommands.MonitorNetworkUtilizationCommand(),
             WinCommands.CleanOldTempFilesCommand(),
-            WinCommands.DownloadImagesCommand()
+            WinCommands.DownloadImagesCommand(),
+            WinCommands.ScanDevicesCommand(),
+            WinCommands.RunCleanupTasksCommand(),
+            WinCommands.ChangeAccessRightsCommand(),
+            WinCommands.WiFiAnalyzerCommand()
         };
 
         foreach (var command in commands)

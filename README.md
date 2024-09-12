@@ -33,6 +33,10 @@ The application currently supports the following commands:
 - Get Battery information
 - Clean old temporary files
 - Download images from a specified URL **
+- Scan and list all network devices
+- Run all cleanup tasks
+- Change access rights for a specified file or directory
+- Analyze WiFi networks
 
 ** The `Download images from a specified URL` command saves the images to the `My Pictures` folder.
 *** The `Get temperature` command may not work on many systems due to the hardware support

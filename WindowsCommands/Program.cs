@@ -39,6 +39,10 @@ public class Program
         rootCommand.AddCommand(WinCommands.MonitorNetworkUtilizationCommand());
         rootCommand.AddCommand(WinCommands.CleanOldTempFilesCommand());
         rootCommand.AddCommand(WinCommands.DownloadImagesCommand());
+        rootCommand.AddCommand(WinCommands.ScanDevicesCommand());
+        rootCommand.AddCommand(WinCommands.RunCleanupTasksCommand());
+        rootCommand.AddCommand(WinCommands.ChangeAccessRightsCommand());
+        rootCommand.AddCommand(WinCommands.WiFiAnalyzerCommand());
         
         Printer.StartPage();
         
