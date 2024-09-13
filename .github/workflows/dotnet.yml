@@ -41,9 +41,3 @@ jobs:
 
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-
-    - name: Build Docker image
-      run: docker build -t windowscommands .
-
-    - name: Run Docker container
-      run: docker run -it windowscommands
