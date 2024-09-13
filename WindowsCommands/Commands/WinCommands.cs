@@ -400,10 +400,11 @@ public static class WinCommands
 
         return command;
     }
-    
+
     public static Command YTDownloaderCommand()
     {
-        var command = new Command("yt-downloader", "Download YouTube videos and optionally convert to MP3. Example: yt-downloader --mode --mp4 --urls \"https://www.youtube.com/watch?v=LPMPHY1Pr2Y&list=PL5JVxghq6LjImIgBrUhUPbv0Vvl7ZdaVl&index=2\" \"https://www.youtube.com/watch?v=kw_0B7cwdFg&list=PL5JVxghq6LjImIgBrUhUPbv0Vvl7ZdaVl&index=3\"")
+        var command = new Command("yt-downloader",
+            "Download YouTube videos and optionally convert to MP3. Example: yt-downloader --mode --mp4 --urls \"https://www.youtube.com/watch?v=LPMPHY1Pr2Y&list=PL5JVxghq6LjImIgBrUhUPbv0Vvl7ZdaVl&index=2\" \"https://www.youtube.com/watch?v=kw_0B7cwdFg&list=PL5JVxghq6LjImIgBrUhUPbv0Vvl7ZdaVl&index=3\"")
         {
             new Option<string>("--mode", "The mode for downloading (e.g., --mp4 or --mp3)."),
             new Option<List<string>>("--urls", "The list of YouTube video URLs to download.")
@@ -427,10 +428,11 @@ public static class WinCommands
 
         return command;
     }
-    
+
     public static Command PortScannerCommand()
     {
-        var command = new Command("port-scanner", "Scan ports on a specified host. Example: port-scanner --host \"thecode.media\" --start-port 0 --end-port 1023")
+        var command = new Command("port-scanner",
+            "Scan ports on a specified host. Example: port-scanner --host \"thecode.media\" --start-port 0 --end-port 1023")
         {
             new Option<string>("--host", "The host to scan."),
             new Option<int?>("--start-port", "The start port for range scanning."),
@@ -457,6 +459,53 @@ public static class WinCommands
             else
             {
                 PortScanner.ScanAllPortsAsync(host).Wait();
+            }
+        });
+
+        return command;
+    }
+
+    public static Command Sha256HasherCommand()
+    {
+        var command = new Command("sha256-hasher",
+            "Compute SHA-256 hash of a text file. Example: sha256-hasher --file \"C:\\Users\\User\\Desktop\\example.txt\" --modify false")
+        {
+            new Option<string>("--file", "The path to the text file."),
+            new Option<bool>("--modify", "Whether to modify the file with the hash (true/false).")
+        };
+
+        command.Handler = CommandHandler.Create<string, bool>((file, modify) =>
+        {
+            if (string.IsNullOrEmpty(file))
+            {
+                Console.WriteLine("File path is required.");
+                return;
+            }
+
+            if (File.Exists(file) && (file.EndsWith(".txt") || file.EndsWith(".doc")))
+            {
+                try
+                {
+                    string content = File.ReadAllText(file);
+                    string res = Sha256Hasher.ComputeHash(content);
+                    Console.WriteLine($"File: {file}, SHA-256: {res}");
+                    ConsoleOutputSaver.SaveOutput($"File: {file}, SHA-256: {res}");
+
+                    if (modify)
+                    {
+                        Sha256Hasher.WriteHashToFile(file, res);
+                        Console.WriteLine($"File: {file} has been modified with the hash.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing {file}: {ex.Message}");
+                    ConsoleOutputSaver.SaveOutput($"Error processing {file}: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"File not found or unsupported file type: {file}");
             }
         });
 

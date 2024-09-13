@@ -1,0 +1,8 @@
+﻿services:
+  windowscommands:
+    image: windowscommands
+    build:
+      context: .
+      dockerfile: WindowsCommands/Dockerfile
+    stdin_open: true
+    tty: true

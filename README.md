@@ -39,9 +39,10 @@ The application currently supports the following commands:
 - Analyze WiFi networks
 - Download YouTube videos and optionally convert to MP3 ****
 - Port Scanner
+- Compute SHA-256 hash of a text file
 
 ** The `Download images from a specified URL` command saves the images to the `My Pictures` folder.
-*** The `Get temperature` command may not work on many systems due to the hardware support
+*** The `Get temperature` command may not work on many systems due to the hardware support. 
 **** The `Download YouTube videos and optionally convert to MP3` command works correctly only with a specific video quality (1: 360p Mp4).
 
 Many commands come with its own set of options that allow you to customize the command's behavior.
@@ -56,6 +57,20 @@ Many commands come with its own set of options that allow you to customize the c
     .\WindowsCommands.exe
     ```
 4. When you start the application, you'll see a title and an available commands.
+
+## Running with Docker
+
+You can also run this application using Docker. To do so, follow these steps:
+
+1. Ensure you have Docker and Docker Compose installed on your system.
+2. Navigate to the directory containing the `docker-compose.yml` file.
+3. Build and run the Docker container using Docker Compose:
+
+    ```sh
+    docker-compose run --rm --service-ports windowscommands
+    ```
+
+Please note that most commands will not work when running from within Docker due to the limitations of accessing system resources from a container. For example, the `port-scanner` command will work, but commands that require direct access to system hardware or the Windows operating system will not function correctly.
 
 ## Future Development
 

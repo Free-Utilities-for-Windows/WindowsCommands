@@ -45,6 +45,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.WiFiAnalyzerCommand());
         rootCommand.AddCommand(WinCommands.YTDownloaderCommand());
         rootCommand.AddCommand(WinCommands.PortScannerCommand());
+        rootCommand.AddCommand(WinCommands.Sha256HasherCommand());
         
         Printer.StartPage();
         

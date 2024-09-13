@@ -66,7 +66,8 @@ __        ___           _
             WinCommands.ChangeAccessRightsCommand(),
             WinCommands.WiFiAnalyzerCommand(),
             WinCommands.YTDownloaderCommand(),
-            WinCommands.PortScannerCommand()
+            WinCommands.PortScannerCommand(),
+            WinCommands.Sha256HasherCommand()
         };
 
         foreach (var command in commands)
