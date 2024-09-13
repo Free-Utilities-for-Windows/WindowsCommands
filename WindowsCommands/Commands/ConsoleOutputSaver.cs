@@ -27,4 +27,9 @@ public static class ConsoleOutputSaver
         var filePath = Path.Combine(folderPath, "ConsoleOutput.txt");
         File.AppendAllText(filePath, output + Environment.NewLine);
     }
+    
+    public static string GetFolderPath()
+    {
+        return folderPath;
+    }
 }

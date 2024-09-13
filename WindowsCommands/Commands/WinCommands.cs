@@ -400,6 +400,68 @@ public static class WinCommands
 
         return command;
     }
+    
+    public static Command YTDownloaderCommand()
+    {
+        var command = new Command("yt-downloader", "Download YouTube videos and optionally convert to MP3. Example: yt-downloader --mode --mp4 --urls \"https://www.youtube.com/watch?v=LPMPHY1Pr2Y&list=PL5JVxghq6LjImIgBrUhUPbv0Vvl7ZdaVl&index=2\" \"https://www.youtube.com/watch?v=kw_0B7cwdFg&list=PL5JVxghq6LjImIgBrUhUPbv0Vvl7ZdaVl&index=3\"")
+        {
+            new Option<string>("--mode", "The mode for downloading (e.g., --mp4 or --mp3)."),
+            new Option<List<string>>("--urls", "The list of YouTube video URLs to download.")
+        };
+
+        command.Handler = CommandHandler.Create<string, List<string>>((mode, urls) =>
+        {
+            if (urls == null || urls.Count == 0)
+            {
+                Console.WriteLine("No URLs provided.");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(mode))
+            {
+                mode = "--mp4";
+            }
+
+            YTDownloader.DownloadVideos(urls, mode).Wait();
+        });
+
+        return command;
+    }
+    
+    public static Command PortScannerCommand()
+    {
+        var command = new Command("port-scanner", "Scan ports on a specified host. Example: port-scanner --host \"thecode.media\" --start-port 0 --end-port 1023")
+        {
+            new Option<string>("--host", "The host to scan."),
+            new Option<int?>("--start-port", "The start port for range scanning."),
+            new Option<int?>("--end-port", "The end port for range scanning."),
+            new Option<int?>("--single-port", "A single port to scan.")
+        };
+
+        command.Handler = CommandHandler.Create<string, int?, int?, int?>((host, startPort, endPort, singlePort) =>
+        {
+            if (string.IsNullOrEmpty(host))
+            {
+                Console.WriteLine("Host is required.");
+                return;
+            }
+
+            if (singlePort.HasValue)
+            {
+                PortScanner.ScanSinglePortAsync(host, singlePort.Value).Wait();
+            }
+            else if (startPort.HasValue && endPort.HasValue)
+            {
+                PortScanner.ScanPortRangeAsync(host, startPort.Value, endPort.Value).Wait();
+            }
+            else
+            {
+                PortScanner.ScanAllPortsAsync(host).Wait();
+            }
+        });
+
+        return command;
+    }
 
     private static void HandleGetFilesCommand(string path)
     {

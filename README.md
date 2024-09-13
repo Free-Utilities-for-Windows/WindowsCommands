@@ -37,9 +37,12 @@ The application currently supports the following commands:
 - Run all cleanup tasks
 - Change access rights for a specified file or directory
 - Analyze WiFi networks
+- Download YouTube videos and optionally convert to MP3 ****
+- Port Scanner
 
 ** The `Download images from a specified URL` command saves the images to the `My Pictures` folder.
 *** The `Get temperature` command may not work on many systems due to the hardware support
+**** The `Download YouTube videos and optionally convert to MP3` command works correctly only with a specific video quality (1: 360p Mp4).
 
 Many commands come with its own set of options that allow you to customize the command's behavior.
 

@@ -43,6 +43,8 @@ public class Program
         rootCommand.AddCommand(WinCommands.RunCleanupTasksCommand());
         rootCommand.AddCommand(WinCommands.ChangeAccessRightsCommand());
         rootCommand.AddCommand(WinCommands.WiFiAnalyzerCommand());
+        rootCommand.AddCommand(WinCommands.YTDownloaderCommand());
+        rootCommand.AddCommand(WinCommands.PortScannerCommand());
         
         Printer.StartPage();
         

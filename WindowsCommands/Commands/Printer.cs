@@ -64,7 +64,9 @@ __        ___           _
             WinCommands.ScanDevicesCommand(),
             WinCommands.RunCleanupTasksCommand(),
             WinCommands.ChangeAccessRightsCommand(),
-            WinCommands.WiFiAnalyzerCommand()
+            WinCommands.WiFiAnalyzerCommand(),
+            WinCommands.YTDownloaderCommand(),
+            WinCommands.PortScannerCommand()
         };
 
         foreach (var command in commands)
