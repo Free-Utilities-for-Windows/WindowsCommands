@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -14,24 +15,28 @@ public static class NetworkInterfaceStats
 
             foreach (ManagementObject obj in searcher.Get())
             {
-                Console.WriteLine("Name: " + obj["Name"]);
-                Console.WriteLine("Total: " + ConvertBytes(obj["BytesTotalPersec"], current));
-                Console.WriteLine("Received: " + ConvertBytes(obj["BytesReceivedPersec"], current));
-                Console.WriteLine("Sent: " + ConvertBytes(obj["BytesSentPersec"], current));
-                Console.WriteLine("PacketsPersec: " + obj["PacketsPersec"]);
-                Console.WriteLine("PacketsReceivedPersec: " + obj["PacketsReceivedPersec"]);
-                Console.WriteLine("PacketsReceivedUnicastPersec: " + obj["PacketsReceivedUnicastPersec"]);
-                Console.WriteLine("PacketsReceivedNonUnicastPersec: " + obj["PacketsReceivedNonUnicastPersec"]);
-                Console.WriteLine("PacketsReceivedDiscarded: " + obj["PacketsReceivedDiscarded"]);
-                Console.WriteLine("PacketsReceivedErrors: " + obj["PacketsReceivedErrors"]);
-                Console.WriteLine("PacketsSentPersec: " + obj["PacketsSentPersec"]);
-                Console.WriteLine("PacketsSentUnicastPersec: " + obj["PacketsSentUnicastPersec"]);
-                Console.WriteLine("PacketsSentNonUnicastPersec: " + obj["PacketsSentNonUnicastPersec"]);
+                string statsInfo = $"Name: {obj["Name"]}\n" +
+                                   $"Total: {ConvertBytes(obj["BytesTotalPersec"], current)}\n" +
+                                   $"Received: {ConvertBytes(obj["BytesReceivedPersec"], current)}\n" +
+                                   $"Sent: {ConvertBytes(obj["BytesSentPersec"], current)}\n" +
+                                   $"PacketsPersec: {obj["PacketsPersec"]}\n" +
+                                   $"PacketsReceivedPersec: {obj["PacketsReceivedPersec"]}\n" +
+                                   $"PacketsReceivedUnicastPersec: {obj["PacketsReceivedUnicastPersec"]}\n" +
+                                   $"PacketsReceivedNonUnicastPersec: {obj["PacketsReceivedNonUnicastPersec"]}\n" +
+                                   $"PacketsReceivedDiscarded: {obj["PacketsReceivedDiscarded"]}\n" +
+                                   $"PacketsReceivedErrors: {obj["PacketsReceivedErrors"]}\n" +
+                                   $"PacketsSentPersec: {obj["PacketsSentPersec"]}\n" +
+                                   $"PacketsSentUnicastPersec: {obj["PacketsSentUnicastPersec"]}\n" +
+                                   $"PacketsSentNonUnicastPersec: {obj["PacketsSentNonUnicastPersec"]}\n";
+                Console.WriteLine(statsInfo);
+                StaticFileLogger.LogInformation(statsInfo);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -51,7 +56,9 @@ public static class NetworkInterfaceStats
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred while converting bytes: " + e.Message);
+            string errorMessage = "An error occurred while converting bytes: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
             return "Error";
         }
     }

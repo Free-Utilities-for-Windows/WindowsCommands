@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -20,12 +21,15 @@ public static class DeviceScanner
                 {
                     var device = CreateDeviceFromNetworkInterface(networkInterface);
                     devices.Add(device);
+                    StaticFileLogger.LogInformation($"Device found: {device.Name}, {device.MacAddress}");
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error scanning devices: {ex.Message}");
+            string errorMessage = $"Error scanning devices: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
 
         return devices;
@@ -80,12 +84,17 @@ public static class DeviceScanner
     {
         foreach (var device in scannedDevices)
         {
-            Console.WriteLine(GetDeviceInformation(device));
-            Console.WriteLine(GetIpInformation(device.GlobalDeviceIp));
+            string deviceInfo = GetDeviceInformation(device);
+            string ipInfo = GetIpInformation(device.GlobalDeviceIp);
+            Console.WriteLine(deviceInfo);
+            Console.WriteLine(ipInfo);
             Console.WriteLine($"Speed: {device.Speed}");
             Console.WriteLine($"Operational Status: {device.OperationalStatus}");
             Console.WriteLine($"Supports Multicast: {device.SupportsMulticast}");
             Console.WriteLine("-------------------------------------------");
+
+            StaticFileLogger.LogInformation(deviceInfo);
+            StaticFileLogger.LogInformation(ipInfo);
         }
     }
 

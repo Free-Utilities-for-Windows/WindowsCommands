@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -25,11 +26,15 @@ public static class CleanerUp
             EraseInternetExplorerHistory();
             RunDISMOperations();
 
-            Console.WriteLine("All cleanup tasks completed successfully.");
+            string successMessage = "All cleanup tasks completed successfully.";
+            Console.WriteLine(successMessage);
+            StaticFileLogger.LogInformation(successMessage);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error running cleanup tasks: {ex.Message}");
+            string errorMessage = $"Error running cleanup tasks: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -46,10 +51,13 @@ public static class CleanerUp
         {
             uint flags = SHERB_NOCONFIRMATION | SHERB_NOPROGRESSUI | SHERB_NOSOUND;
             SHEmptyRecycleBin(IntPtr.Zero, null, flags);
+            StaticFileLogger.LogInformation("Recycle bin emptied successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error emptying recycle bin");
+            string errorMessage = "Error emptying recycle bin: " + ex.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -210,11 +218,15 @@ public static class CleanerUp
                 UseShellExecute = false
             })?.WaitForExit();
 
-            Console.WriteLine("Event logs cleaned successfully.");
+            string successMessage = "Event logs cleaned successfully.";
+            Console.WriteLine(successMessage);
+            StaticFileLogger.LogInformation(successMessage);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error cleaning event logs: {ex.Message}");
+            string errorMessage = $"Error cleaning event logs: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -230,11 +242,15 @@ public static class CleanerUp
                 UseShellExecute = false
             })?.WaitForExit();
 
-            Console.WriteLine("DNS resolver cache reset successfully.");
+            string successMessage = "DNS resolver cache reset successfully.";
+            Console.WriteLine(successMessage);
+            StaticFileLogger.LogInformation(successMessage);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error resetting DNS resolver cache: {ex.Message}");
+            string errorMessage = $"Error resetting DNS resolver cache: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -252,11 +268,15 @@ public static class CleanerUp
             process.Start();
             process.WaitForExit();
 
-            Console.WriteLine("Internet Explorer temporary data erased successfully.");
+            string successMessage = "Internet Explorer temporary data erased successfully.";
+            Console.WriteLine(successMessage);
+            StaticFileLogger.LogInformation(successMessage);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to erase Internet Explorer temporary data: {ex.Message}");
+            string errorMessage = $"Failed to erase Internet Explorer temporary data: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -276,16 +296,22 @@ public static class CleanerUp
 
             if (process.ExitCode == 0)
             {
-                Console.WriteLine("DISM operation completed successfully.");
+                string successMessage = "DISM operation completed successfully.";
+                Console.WriteLine(successMessage);
+                StaticFileLogger.LogInformation(successMessage);
             }
             else
             {
-                Console.WriteLine($"DISM operation failed. Exit code: {process.ExitCode}");
+                string errorMessage = $"DISM operation failed. Exit code: {process.ExitCode}";
+                Console.WriteLine(errorMessage);
+                StaticFileLogger.LogError(errorMessage);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to run DISM operation: {ex.Message}");
+            string errorMessage = $"Failed to run DISM operation: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -306,7 +332,9 @@ public static class CleanerUp
                     TryDeleteDirectory(dir);
                 }
 
-                Console.WriteLine($"{folderName} cleaned successfully.");
+                string successMessage = $"{folderName} cleaned successfully.";
+                Console.WriteLine(successMessage);
+                StaticFileLogger.LogInformation(successMessage);
             }
         }
         catch (UnauthorizedAccessException)
@@ -317,7 +345,9 @@ public static class CleanerUp
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error cleaning {folderName}: {ex.Message}");
+            string errorMessage = $"Error cleaning {folderName}: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -331,7 +361,9 @@ public static class CleanerUp
             try
             {
                 file.Delete();
-                Console.WriteLine($"File {file.FullName} deleted successfully.");
+                string successMessage = $"File {file.FullName} deleted successfully.";
+                Console.WriteLine(successMessage);
+                StaticFileLogger.LogInformation(successMessage);
                 return;
             }
             catch (UnauthorizedAccessException)
@@ -343,12 +375,16 @@ public static class CleanerUp
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting file {file.FullName}: {ex.Message}");
+                string errorMessage = $"Error deleting file {file.FullName}: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                StaticFileLogger.LogError(errorMessage);
                 return;
             }
         }
 
-        Console.WriteLine($"Could not delete file {file.FullName} after {MaxRetries} attempts due to it being in use by another process.");
+        string finalErrorMessage = $"Could not delete file {file.FullName} after {MaxRetries} attempts due to it being in use by another process.";
+        Console.WriteLine(finalErrorMessage);
+        StaticFileLogger.LogError(finalErrorMessage);
     }
 
     private static void TryDeleteDirectory(DirectoryInfo dir)
@@ -356,7 +392,9 @@ public static class CleanerUp
         try
         {
             dir.Delete(true);
-            Console.WriteLine($"Directory {dir.FullName} deleted successfully.");
+            string successMessage = $"Directory {dir.FullName} deleted successfully.";
+            Console.WriteLine(successMessage);
+            StaticFileLogger.LogInformation(successMessage);
         }
         catch (UnauthorizedAccessException)
         {
@@ -369,7 +407,9 @@ public static class CleanerUp
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error deleting directory {dir.FullName}: {ex.Message}");
+            string errorMessage = $"Error deleting directory {dir.FullName}: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -390,7 +430,9 @@ public static class CleanerUp
                     try
                     {
                         File.Delete(file);
-                        Console.WriteLine($"File {file} deleted successfully.");
+                        string successMessage = $"File {file} deleted successfully.";
+                        Console.WriteLine(successMessage);
+                        StaticFileLogger.LogInformation(successMessage);
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -400,11 +442,15 @@ public static class CleanerUp
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error deleting file '{file}': {ex.Message}");
+                        string errorMessage = $"Error deleting file '{file}': {ex.Message}";
+                        Console.WriteLine(errorMessage);
+                        StaticFileLogger.LogError(errorMessage);
                     }
                 }
 
-                Console.WriteLine($"Files with pattern {pattern} deleted successfully in {directory}.");
+                string finalSuccessMessage = $"Files with pattern {pattern} deleted successfully in {directory}.";
+                Console.WriteLine(finalSuccessMessage);
+                StaticFileLogger.LogInformation(finalSuccessMessage);
             }
         }
         catch (UnauthorizedAccessException)
@@ -412,7 +458,9 @@ public static class CleanerUp
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error deleting files with pattern {pattern} in {directory}: {ex.Message}");
+            string errorMessage = $"Error deleting files with pattern {pattern} in {directory}: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 

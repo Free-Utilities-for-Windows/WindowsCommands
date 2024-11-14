@@ -1,11 +1,23 @@
-﻿namespace WindowsCommands;
+﻿using WindowsCommands.Logger;
+
+namespace WindowsCommands;
 
 public static class FilesInformation
 {
     public static List<FileData> GetFiles(string path)
     {
         var files = new List<FileData>();
-        AddFilesFromDirectory(files, path);
+        try
+        {
+            AddFilesFromDirectory(files, path);
+            StaticFileLogger.LogInformation($"Successfully retrieved files from directory: {path}");
+        }
+        catch (Exception e)
+        {
+            string errorMessage = $"An error occurred while getting files from directory {path}: {e.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
+        }
         return files;
     }
 
@@ -30,6 +42,7 @@ public static class FilesInformation
                     LastWriteTime = directoryInfo.LastWriteTime.ToString("dd/MM/yyyy hh:mm:ss")
                 };
                 files.Add(fileData);
+                StaticFileLogger.LogInformation($"Added directory: {fileData.FullName}");
             }
             else
             {
@@ -44,6 +57,7 @@ public static class FilesInformation
                     LastWriteTime = fileInfo.LastWriteTime.ToString("dd/MM/yyyy hh:mm:ss")
                 };
                 files.Add(fileData);
+                StaticFileLogger.LogInformation($"Added file: {fileData.FullName}");
             }
         }
     }
@@ -53,14 +67,23 @@ public static class FilesInformation
         var info = new DirectoryInfo(path);
         long size = 0;
 
-        foreach (var file in info.GetFiles())
+        try
         {
-            size += file.Length;
-        }
+            foreach (var file in info.GetFiles())
+            {
+                size += file.Length;
+            }
 
-        foreach (var directory in info.GetDirectories())
+            foreach (var directory in info.GetDirectories())
+            {
+                size += GetDirectorySize(directory.FullName);
+            }
+        }
+        catch (Exception e)
         {
-            size += GetDirectorySize(directory.FullName);
+            string errorMessage = $"An error occurred while calculating the size of directory {path}: {e.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
 
         return size;

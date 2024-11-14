@@ -1,14 +1,14 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.Text.RegularExpressions;
-using WindowsCommands;
+using WindowsCommands.AdminCheck;
 using WindowsCommands.Commands;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        ConsoleOutputSaver.Initialize();
+        var administratorChecker = new AdministratorChecker();
+        bool isAdmin = administratorChecker.IsCurrentUserAdmin();
         
         var rootCommand = new RootCommand();
         
@@ -48,6 +48,7 @@ public class Program
         rootCommand.AddCommand(WinCommands.Sha256HasherCommand());
         
         Printer.StartPage();
+        Printer.PrivilegeStatusPrinter(isAdmin);
         
         Printer.AvailableCommands();
         
@@ -63,7 +64,6 @@ public class Program
                 .ToArray();
 
             rootCommand.InvokeAsync(inputArgs).Wait();
-            ConsoleOutputSaver.SaveOutput(input);
         }
     }
 }

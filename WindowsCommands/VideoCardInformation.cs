@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -13,30 +14,38 @@ public static class VideoCardInformation
 
             foreach (ManagementObject queryObj in searcher.Get())
             {
-                var videoCardInfo = new VideoCardInfo();
-                videoCardInfo.Model = queryObj["Name"].ToString();
-                videoCardInfo.Display = queryObj["CurrentHorizontalResolution"] + "x" + queryObj["CurrentVerticalResolution"];
-                videoCardInfo.VideoRAM = (Convert.ToUInt64(queryObj["AdapterRAM"]) / (1024 * 1024)) + " MB";
+                var videoCardInfo = new VideoCardInfo
+                {
+                    Model = queryObj["Name"].ToString(),
+                    Display = queryObj["CurrentHorizontalResolution"] + "x" + queryObj["CurrentVerticalResolution"],
+                    VideoRAM = (Convert.ToUInt64(queryObj["AdapterRAM"]) / (1024 * 1024)) + " MB"
+                };
                 videoCardInfos.Add(videoCardInfo);
             }
 
             foreach (var videoCardInfo in videoCardInfos)
             {
-                Console.WriteLine("Model: " + videoCardInfo.Model);
-                Console.WriteLine("Display: " + videoCardInfo.Display);
-                Console.WriteLine("VideoRAM: " + videoCardInfo.VideoRAM);
+                string videoCardInfoMessage = $"Model: {videoCardInfo.Model}\n" +
+                                              $"Display: {videoCardInfo.Display}\n" +
+                                              $"VideoRAM: {videoCardInfo.VideoRAM}";
+                Console.WriteLine(videoCardInfoMessage);
+                StaticFileLogger.LogInformation(videoCardInfoMessage);
             }
         }
         catch (ManagementException e)
         {
-            Console.WriteLine("An error occurred while querying for WMI data: " + e.Message);
+            string errorMessage = "An error occurred while querying for WMI data: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
-    
+
     public class VideoCardInfo
     {
         public string Model { get; set; }

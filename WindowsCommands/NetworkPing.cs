@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -18,7 +19,9 @@ public static class NetworkPing
             {
                 if (Console.KeyAvailable)
                 {
-                    Console.WriteLine("Execution interrupted by user.");
+                    string interruptMessage = "Execution interrupted by user.";
+                    Console.WriteLine(interruptMessage);
+                    StaticFileLogger.LogInformation(interruptMessage);
                     Environment.Exit(0);
                 }
                 
@@ -31,23 +34,24 @@ public static class NetworkPing
                 }
                 catch (PingException ex)
                 {
-                    Console.WriteLine($"Error pinging address: {ip}. Exception: {ex.Message}");
+                    string errorMessage = $"Error pinging address: {ip}. Exception: {ex.Message}";
+                    Console.WriteLine(errorMessage);
+                    StaticFileLogger.LogError(errorMessage);
                     continue;
                 }
 
-                if (reply.Status == IPStatus.Success)
-                {
-                    Console.WriteLine($"Address: {ip}, Status: Success");
-                }
-                else
-                {
-                    Console.WriteLine($"Address: {ip}, Status: {reply.Status}");
-                }
+                string pingResult = reply.Status == IPStatus.Success
+                    ? $"Address: {ip}, Status: Success"
+                    : $"Address: {ip}, Status: {reply.Status}";
+                Console.WriteLine(pingResult);
+                StaticFileLogger.LogInformation(pingResult);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            string errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 }

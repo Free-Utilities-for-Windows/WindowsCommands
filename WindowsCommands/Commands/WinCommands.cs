@@ -1,5 +1,6 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands.Commands;
 
@@ -489,7 +490,7 @@ public static class WinCommands
                     string content = File.ReadAllText(file);
                     string res = Sha256Hasher.ComputeHash(content);
                     Console.WriteLine($"File: {file}, SHA-256: {res}");
-                    ConsoleOutputSaver.SaveOutput($"File: {file}, SHA-256: {res}");
+                    StaticFileLogger.LogInformation($"File: {file}, SHA-256: {res}");
 
                     if (modify)
                     {
@@ -500,7 +501,7 @@ public static class WinCommands
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error processing {file}: {ex.Message}");
-                    ConsoleOutputSaver.SaveOutput($"Error processing {file}: {ex.Message}");
+                    StaticFileLogger.LogInformation($"Error processing {file}: {ex.Message}");
                 }
             }
             else

@@ -1,6 +1,8 @@
 ﻿using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography.X509Certificates;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -20,11 +22,13 @@ public static class WebCertificateInformation
                            (sender, certificate, chain, errors) => true))
                 {
                     sslStream.AuthenticateAsClient(uri.Host);
-                    var serverCertificate = sslStream.RemoteCertificate;
+                    var serverCertificate = sslStream.RemoteCertificate as X509Certificate2;
 
                     if (serverCertificate == null)
                     {
-                        Console.WriteLine("No certificate found for the specified URL.");
+                        string noCertMessage = "No certificate found for the specified URL.";
+                        Console.WriteLine(noCertMessage);
+                        StaticFileLogger.LogError(noCertMessage);
                         return;
                     }
 
@@ -42,26 +46,34 @@ public static class WebCertificateInformation
                         End = dateEnd
                     };
 
-                    Console.WriteLine("Host: " + webCertificateInfo.Host);
-                    Console.WriteLine("Server: " + webCertificateInfo.Server);
-                    Console.WriteLine("Status Code: " + webCertificateInfo.StatusCode);
-                    Console.WriteLine("Certificate: " + webCertificateInfo.Certificate);
-                    Console.WriteLine("Issued By: " + webCertificateInfo.Issued);
-                    Console.WriteLine("Expiration Date: " + webCertificateInfo.End);
+                    string certInfo = $"Host: {webCertificateInfo.Host}\n" +
+                                      $"Server: {webCertificateInfo.Server}\n" +
+                                      $"Status Code: {webCertificateInfo.StatusCode}\n" +
+                                      $"Certificate: {webCertificateInfo.Certificate}\n" +
+                                      $"Issued By: {webCertificateInfo.Issued}\n" +
+                                      $"Expiration Date: {webCertificateInfo.End}";
+                    Console.WriteLine(certInfo);
+                    StaticFileLogger.LogInformation(certInfo);
                 }
             }
             else if (uri.Scheme == Uri.UriSchemeHttp)
             {
-                Console.WriteLine("The specified URL uses HTTP, not HTTPS. No certificate information available.");
+                string httpMessage = "The specified URL uses HTTP, not HTTPS. No certificate information available.";
+                Console.WriteLine(httpMessage);
+                StaticFileLogger.LogError(httpMessage);
             }
             else
             {
-                Console.WriteLine("The specified URL is not a valid HTTP or HTTPS URL.");
+                string invalidUrlMessage = "The specified URL is not a valid HTTP or HTTPS URL.";
+                Console.WriteLine(invalidUrlMessage);
+                StaticFileLogger.LogError(invalidUrlMessage);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 

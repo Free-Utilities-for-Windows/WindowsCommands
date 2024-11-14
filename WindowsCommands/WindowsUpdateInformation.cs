@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -41,12 +42,16 @@ public static class WindowsUpdateInformation
 
             foreach (var update in winUpdates)
             {
-                Console.WriteLine($"HotFixID: {update.HotFixID}, InstallDate: {update.InstallDate:dd.MM.yyyy}, Description: {update.Description}, InstalledBy: {update.InstalledBy}");
+                string updateInfo = $"HotFixID: {update.HotFixID}, InstallDate: {update.InstallDate:dd.MM.yyyy}, Description: {update.Description}, InstalledBy: {update.InstalledBy}";
+                Console.WriteLine(updateInfo);
+                StaticFileLogger.LogInformation(updateInfo);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
