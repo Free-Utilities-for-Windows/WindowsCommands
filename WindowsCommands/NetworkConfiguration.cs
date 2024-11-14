@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -13,22 +14,26 @@ public static class NetworkConfiguration
 
             foreach (ManagementObject obj in searcher.Get())
             {
-                Console.WriteLine("Description: " + obj["Description"]);
-                Console.WriteLine("IPAddress: " + (obj["IPAddress"] != null ? String.Join(", ", (string[])obj["IPAddress"]) : "N/A"));
-                Console.WriteLine("GatewayDefault: " + (obj["DefaultIPGateway"] != null ? String.Join(", ", (string[])obj["DefaultIPGateway"]) : "N/A"));
-                Console.WriteLine("Subnet: " + (obj["IPSubnet"] != null ? String.Join(", ", (string[])obj["IPSubnet"]) : "N/A"));
-                Console.WriteLine("DNSServer: " + (obj["DNSServerSearchOrder"] != null ? String.Join(", ", (string[])obj["DNSServerSearchOrder"]) : "N/A"));
-                Console.WriteLine("MACAddress: " + obj["MACAddress"]);
-                Console.WriteLine("DHCPEnabled: " + obj["DHCPEnabled"]);
-                Console.WriteLine("DHCPServer: " + obj["DHCPServer"]);
-                Console.WriteLine("DHCPLeaseObtained: " + ConvertToDateTime(obj["DHCPLeaseObtained"]));
-                Console.WriteLine("DHCPLeaseExpires: " + ConvertToDateTime(obj["DHCPLeaseExpires"]));
-                Console.WriteLine("\n-----------------------------------------");
+                string networkConfigInfo = $"Description: {obj["Description"]}\n" +
+                                           $"IPAddress: {(obj["IPAddress"] != null ? String.Join(", ", (string[])obj["IPAddress"]) : "N/A")}\n" +
+                                           $"GatewayDefault: {(obj["DefaultIPGateway"] != null ? String.Join(", ", (string[])obj["DefaultIPGateway"]) : "N/A")}\n" +
+                                           $"Subnet: {(obj["IPSubnet"] != null ? String.Join(", ", (string[])obj["IPSubnet"]) : "N/A")}\n" +
+                                           $"DNSServer: {(obj["DNSServerSearchOrder"] != null ? String.Join(", ", (string[])obj["DNSServerSearchOrder"]) : "N/A")}\n" +
+                                           $"MACAddress: {obj["MACAddress"]}\n" +
+                                           $"DHCPEnabled: {obj["DHCPEnabled"]}\n" +
+                                           $"DHCPServer: {obj["DHCPServer"]}\n" +
+                                           $"DHCPLeaseObtained: {ConvertToDateTime(obj["DHCPLeaseObtained"])}\n" +
+                                           $"DHCPLeaseExpires: {ConvertToDateTime(obj["DHCPLeaseExpires"])}\n" +
+                                           "\n-----------------------------------------";
+                Console.WriteLine(networkConfigInfo);
+                StaticFileLogger.LogInformation(networkConfigInfo);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("An error occurred: " + ex.Message);
+            string errorMessage = "An error occurred: " + ex.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 

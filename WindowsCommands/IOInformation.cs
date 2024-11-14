@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -12,27 +13,28 @@ public static class IOInformation
 
             foreach (ManagementObject obj in searcher.Get())
             {
-                Console.WriteLine("Name: {0}", obj["Name"]);
-                Console.WriteLine("ReadWriteTime: {0} %", obj["PercentDiskTime"]);
-                Console.WriteLine("ReadTime: {0} %", obj["PercentDiskReadTime"]);
-                Console.WriteLine("WriteTime: {0} %", obj["PercentDiskWriteTime"]);
-                Console.WriteLine("IdleTime: {0} %", obj["PercentIdleTime"]);
-                Console.WriteLine("QueueLength: {0}", obj["CurrentDiskQueueLength"]);
-                Console.WriteLine("BytesPersec: {0} MByte/Sec",
-                    (Convert.ToDouble(obj["DiskBytesPersec"]) / 1024 / 1024).ToString("0.000"));
-                Console.WriteLine("ReadBytesPersec: {0} MByte/Sec",
-                    (Convert.ToDouble(obj["DiskReadBytesPersec"]) / 1024 / 1024).ToString("0.000"));
-                Console.WriteLine("WriteBytesPersec: {0} MByte/Sec",
-                    (Convert.ToDouble(obj["DiskWriteBytesPersec"]) / 1024 / 1024).ToString("0.000"));
-                Console.WriteLine("IOps: {0}", obj["DiskTransfersPersec"]);
-                Console.WriteLine("ReadsIOps: {0}", obj["DiskReadsPersec"]);
-                Console.WriteLine("WriteIOps: {0}", obj["DiskWritesPersec"]);
-                Console.WriteLine("\n-----------------------------------------");
+                string ioInfo = $"Name: {obj["Name"]}\n" +
+                                $"ReadWriteTime: {obj["PercentDiskTime"]} %\n" +
+                                $"ReadTime: {obj["PercentDiskReadTime"]} %\n" +
+                                $"WriteTime: {obj["PercentDiskWriteTime"]} %\n" +
+                                $"IdleTime: {obj["PercentIdleTime"]} %\n" +
+                                $"QueueLength: {obj["CurrentDiskQueueLength"]}\n" +
+                                $"BytesPersec: {(Convert.ToDouble(obj["DiskBytesPersec"]) / 1024 / 1024).ToString("0.000")} MByte/Sec\n" +
+                                $"ReadBytesPersec: {(Convert.ToDouble(obj["DiskReadBytesPersec"]) / 1024 / 1024).ToString("0.000")} MByte/Sec\n" +
+                                $"WriteBytesPersec: {(Convert.ToDouble(obj["DiskWriteBytesPersec"]) / 1024 / 1024).ToString("0.000")} MByte/Sec\n" +
+                                $"IOps: {obj["DiskTransfersPersec"]}\n" +
+                                $"ReadsIOps: {obj["DiskReadsPersec"]}\n" +
+                                $"WriteIOps: {obj["DiskWritesPersec"]}\n" +
+                                "\n-----------------------------------------";
+                Console.WriteLine(ioInfo);
+                StaticFileLogger.LogInformation(ioInfo);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 }

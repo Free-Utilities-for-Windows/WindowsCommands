@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -13,17 +14,23 @@ public static class TemperatureInfo
             {
                 UInt32 tempKelvin = Convert.ToUInt32(queryObj["CurrentTemperature"]);
                 double tempCelsius = tempKelvin / 10.0 - 273.15;
-                Console.WriteLine("Temperature: {0}°C", tempCelsius);
+                string tempMessage = $"Temperature: {tempCelsius}°C";
+                Console.WriteLine(tempMessage);
+                StaticFileLogger.LogInformation(tempMessage);
                 return;
             }
         }
         catch (ManagementException e)
         {
-            Console.WriteLine("Cannot get temperature: An error occurred while querying for WMI data: " + e.Message);
+            string errorMessage = "Cannot get temperature: An error occurred while querying for WMI data: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
         catch (Exception e)
         {
-            Console.WriteLine("Cannot get temperature: An error occurred: " + e.Message);
+            string errorMessage = "Cannot get temperature: An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
 
         try
@@ -35,7 +42,9 @@ public static class TemperatureInfo
                 {
                     UInt32 tempKelvin = Convert.ToUInt32(queryObj["CurrentReading"]);
                     double tempCelsius = tempKelvin / 10.0 - 273.15;
-                    Console.WriteLine("Temperature (Celsius): " + tempCelsius);
+                    string tempMessage = $"Temperature (Celsius): {tempCelsius}";
+                    Console.WriteLine(tempMessage);
+                    StaticFileLogger.LogInformation(tempMessage);
                     return;
                 }
             }
@@ -47,20 +56,28 @@ public static class TemperatureInfo
                 {
                     UInt32 tempKelvin = Convert.ToUInt32(queryObj["CurrentTemperature"]);
                     double tempCelsius = tempKelvin / 10.0 - 273.15;
-                    Console.WriteLine("Temperature (Celsius): " + tempCelsius);
+                    string tempMessage = $"Temperature (Celsius): {tempCelsius}";
+                    Console.WriteLine(tempMessage);
+                    StaticFileLogger.LogInformation(tempMessage);
                     return;
                 }
             }
         }
         catch (ManagementException e)
         {
-            Console.WriteLine("Cannot get temperature: An error occurred while querying for WMI data: " + e.Message);
+            string errorMessage = "Cannot get temperature: An error occurred while querying for WMI data: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
         catch (Exception e)
         {
-            Console.WriteLine("Cannot get temperature: An error occurred: " + e.Message);
+            string errorMessage = "Cannot get temperature: An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
 
-        Console.WriteLine("Cannot get temperature: Unsupported on this system");
+        string unsupportedMessage = "Cannot get temperature: Unsupported on this system";
+        Console.WriteLine(unsupportedMessage);
+        StaticFileLogger.LogError(unsupportedMessage);
     }
 }

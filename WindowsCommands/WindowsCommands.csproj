@@ -17,6 +17,7 @@
         <PackageReference Include="managedwifi" Version="1.1.0" />
         <PackageReference Include="VideoLibrary" Version="3.2.4" />
         <PackageReference Include="MediaToolkit" Version="1.1.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>

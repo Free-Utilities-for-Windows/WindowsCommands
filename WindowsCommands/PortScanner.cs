@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using WindowsCommands.Commands;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -27,15 +27,18 @@ public static class PortScanner
                         await tcpClient.ConnectAsync(host, port);
 
                         string service = GetPortService(port);
-                        Console.WriteLine($"Port {port} is open. Service: {service}");
-                        ConsoleOutputSaver.SaveOutput($"Port {port} is open. Service: {service}");
+                        string openPortMessage = $"Port {port} is open. Service: {service}";
+                        Console.WriteLine(openPortMessage);
+                        StaticFileLogger.LogInformation(openPortMessage);
 
                         await ExecuteHttpEnumScriptAsync(host, port);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Port {port} is closed");
+                    string closedPortMessage = $"Port {port} is closed";
+                    Console.WriteLine(closedPortMessage);
+                    StaticFileLogger.LogError(closedPortMessage);
                 }
                 finally
                 {
@@ -65,15 +68,18 @@ public static class PortScanner
                         await tcpClient.ConnectAsync(host, port);
 
                         string service = GetPortService(port);
-                        Console.WriteLine($"Port {port} is open. Service: {service}");
-                        ConsoleOutputSaver.SaveOutput($"Port {port} is open. Service: {service}");
+                        string openPortMessage = $"Port {port} is open. Service: {service}";
+                        Console.WriteLine(openPortMessage);
+                        StaticFileLogger.LogInformation(openPortMessage);
 
                         await ExecuteHttpEnumScriptAsync(host, port);
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Console.WriteLine($"Port {port} is closed");
+                    string closedPortMessage = $"Port {port} is closed";
+                    Console.WriteLine(closedPortMessage);
+                    StaticFileLogger.LogError(closedPortMessage);
                 }
                 finally
                 {
@@ -94,57 +100,43 @@ public static class PortScanner
                 await tcpClient.ConnectAsync(host, port);
 
                 string service = GetPortService(port);
-                Console.WriteLine($"Port {port} is open. Service: {service}");
-                ConsoleOutputSaver.SaveOutput($"Port {port} is open. Service: {service}");
+                string openPortMessage = $"Port {port} is open. Service: {service}";
+                Console.WriteLine(openPortMessage);
+                StaticFileLogger.LogInformation(openPortMessage);
 
                 await ExecuteHttpEnumScriptAsync(host, port);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Port {port} is closed");
+                string closedPortMessage = $"Port {port} is closed";
+                Console.WriteLine(closedPortMessage);
+                StaticFileLogger.LogError(closedPortMessage);
             }
         }
     }
 
     private static string GetPortService(int port)
     {
-        switch (port)
+        return port switch
         {
-            case 80:
-                return "HTTP protocol proxy service";
-            case 135:
-                return "DCE endpoint resolutionnetbios-ns";
-            case 445:
-                return "Security service";
-            case 1025:
-                return "NetSpy.698(YAI)";
-            case 8080:
-                return "HTTP protocol proxy service";
-            case 8081:
-                return "HTTP protocol proxy service";
-            case 3128:
-                return "HTTP protocol proxy service";
-            case 9080:
-                return "HTTP protocol proxy service";
-            case 1080:
-                return "SOCKS protocol proxy service";
-            case 21:
-                return "FTP (file transfer) protocol proxy service";
-            case 23:
-                return "Telnet (remote login) protocol proxy service";
-            case 443:
-                return "HTTPS protocol proxy service";
-            case 69:
-                return "TFTP protocol proxy service";
-            case 22:
-                return "SSH, SCP, port redirection protocol proxy service";
-            case 25:
-                return "SMTP protocol proxy service";
-            case 110:
-                return "POP3 protocol proxy service";
-            default:
-                return "Unknown service";
-        }
+            80 => "HTTP protocol proxy service",
+            135 => "DCE endpoint resolutionnetbios-ns",
+            445 => "Security service",
+            1025 => "NetSpy.698(YAI)",
+            8080 => "HTTP protocol proxy service",
+            8081 => "HTTP protocol proxy service",
+            3128 => "HTTP protocol proxy service",
+            9080 => "HTTP protocol proxy service",
+            1080 => "SOCKS protocol proxy service",
+            21 => "FTP (file transfer) protocol proxy service",
+            23 => "Telnet (remote login) protocol proxy service",
+            443 => "HTTPS protocol proxy service",
+            69 => "TFTP protocol proxy service",
+            22 => "SSH, SCP, port redirection protocol proxy service",
+            25 => "SMTP protocol proxy service",
+            110 => "POP3 protocol proxy service",
+            _ => "Unknown service",
+        };
     }
 
     private static async Task ExecuteHttpEnumScriptAsync(string host, int port)
@@ -165,8 +157,9 @@ public static class PortScanner
 
             if (response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"Found path: {fullPath}");
-                ConsoleOutputSaver.SaveOutput($"Found path: {fullPath}");
+                string foundPathMessage = $"Found path: {fullPath}";
+                Console.WriteLine(foundPathMessage);
+                StaticFileLogger.LogInformation(foundPathMessage);
 
                 if (path.EndsWith("/"))
                 {
@@ -185,8 +178,9 @@ public static class PortScanner
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error when sending request to {fullPath}: {ex.Message}");
-            ConsoleOutputSaver.SaveOutput($"Error when sending request to {fullPath}: {ex.Message}");
+            string errorMessage = $"Error when sending request to {fullPath}: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 }

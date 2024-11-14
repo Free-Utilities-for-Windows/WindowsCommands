@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -9,16 +10,26 @@ public static class DiskExplorer
         const string query = "Select DeviceID, Caption, InterfaceType, MediaType, Size FROM Win32_DiskDrive";
         ManagementObjectSearcher searcher = new(@"root\CIMV2", query);
 
-        foreach (ManagementObject moDrive in searcher.Get())
+        try
         {
-            string deviceID = moDrive["DeviceID"] as string ?? "";
-            string caption = moDrive["Caption"] as string ?? "";
-            ulong size = moDrive["Size"] as ulong? ?? 0;
-            string mediaType = moDrive["MediaType"] as string ?? "";
-            string interfaceType = moDrive["InterfaceType"] as string ?? "";
-            var drive = new PhysicalDrive(deviceID, caption, size, mediaType, interfaceType);
-            Console.WriteLine(
-                $"ID: {drive.ID}, Name: {drive.Name}, Size: {drive.SizeGbText} GB, MediaType: {drive.MediaType}, InterfaceType: {drive.InterfaceType}");
+            foreach (ManagementObject moDrive in searcher.Get())
+            {
+                string deviceID = moDrive["DeviceID"] as string ?? "";
+                string caption = moDrive["Caption"] as string ?? "";
+                ulong size = moDrive["Size"] as ulong? ?? 0;
+                string mediaType = moDrive["MediaType"] as string ?? "";
+                string interfaceType = moDrive["InterfaceType"] as string ?? "";
+                var drive = new PhysicalDrive(deviceID, caption, size, mediaType, interfaceType);
+                string driveInfo = $"ID: {drive.ID}, Name: {drive.Name}, Size: {drive.SizeGbText} GB, MediaType: {drive.MediaType}, InterfaceType: {drive.InterfaceType}";
+                Console.WriteLine(driveInfo);
+                StaticFileLogger.LogInformation(driveInfo);
+            }
+        }
+        catch (Exception ex)
+        {
+            string errorMessage = $"Error getting drives: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -28,27 +39,38 @@ public static class DiskExplorer
             $"ASSOCIATORS OF {{Win32_DiskDrive.DeviceID='{deviceId}'}}  WHERE ASSOCCLASS = Win32_DiskDriveToDiskPartition";
 
         ManagementObjectSearcher searcher = new(@"root\CIMV2", partitionQuery);
-        ManagementObjectCollection partitions = searcher.Get();
-        foreach (ManagementObject moPartition in partitions)
+
+        try
         {
-            string partitionID = moPartition["DeviceID"] as string ?? "";
-            ulong size = moPartition["Size"] as ulong? ?? 0;
-            bool isBootable = moPartition["Bootable"] as bool? ?? false;
+            ManagementObjectCollection partitions = searcher.Get();
+            foreach (ManagementObject moPartition in partitions)
+            {
+                string partitionID = moPartition["DeviceID"] as string ?? "";
+                ulong size = moPartition["Size"] as ulong? ?? 0;
+                bool isBootable = moPartition["Bootable"] as bool? ?? false;
 
-            string ldQuery =
-                $"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partitionID}'}} WHERE ASSOCCLASS = Win32_LogicalDiskToPartition";
-            ManagementObjectSearcher ldSearcher = new(@"root\CIMV2", ldQuery);
+                string ldQuery =
+                    $"ASSOCIATORS OF {{Win32_DiskPartition.DeviceID='{partitionID}'}} WHERE ASSOCCLASS = Win32_LogicalDiskToPartition";
+                ManagementObjectSearcher ldSearcher = new(@"root\CIMV2", ldQuery);
 
-            ManagementObjectCollection logicalDisks = ldSearcher.Get();
+                ManagementObjectCollection logicalDisks = ldSearcher.Get();
 
-            List<string> roots = new();
-            foreach (ManagementObject logicalDisk in logicalDisks)
-                roots.Add(logicalDisk["DeviceID"] as string ?? "");
-            string directoryRoot = string.Join(',', roots);
+                List<string> roots = new();
+                foreach (ManagementObject logicalDisk in logicalDisks)
+                    roots.Add(logicalDisk["DeviceID"] as string ?? "");
+                string directoryRoot = string.Join(',', roots);
 
-            var logicalDrive = new LogicalDrive(directoryRoot, partitionID, size, isBootable);
-            Console.WriteLine(
-                $"DirectoryRoot: {logicalDrive.DirectoryRoot}, PartitionID: {logicalDrive.PartitionID}, Size: {logicalDrive.SizeGbText} GB, IsBootable: {logicalDrive.IsBootable}");
+                var logicalDrive = new LogicalDrive(directoryRoot, partitionID, size, isBootable);
+                string logicalDriveInfo = $"DirectoryRoot: {logicalDrive.DirectoryRoot}, PartitionID: {logicalDrive.PartitionID}, Size: {logicalDrive.SizeGbText} GB, IsBootable: {logicalDrive.IsBootable}";
+                Console.WriteLine(logicalDriveInfo);
+                StaticFileLogger.LogInformation(logicalDriveInfo);
+            }
+        }
+        catch (Exception ex)
+        {
+            string errorMessage = $"Error getting logical drives: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 

@@ -2,36 +2,52 @@
 using MediaToolkit.Model;
 using VideoLibrary;
 using WindowsCommands.Commands;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
 public static class YTDownloader
 {
-    public static void DownloadVideo(string videoUrl, string mode, int? desiredQualityIndex = null)
+        public static void DownloadVideo(string videoUrl, string mode, int? desiredQualityIndex = null)
     {
-        if (!videoUrl.StartsWith("https://www.youtube.com/watch?v="))
+        try
         {
-            throw new Exception("Wrong URL format");
+            if (!videoUrl.StartsWith("https://www.youtube.com/watch?v="))
+            {
+                throw new Exception("Wrong URL format");
+            }
+
+            var youTube = YouTube.Default;
+            var videos = youTube.GetAllVideos(videoUrl);
+            var videoList = videos.Where(v => v.AdaptiveKind == AdaptiveKind.Video || v.AdaptiveKind == AdaptiveKind.None).ToList();
+
+            if (!videoList.Any())
+            {
+                throw new Exception("No available videos found for the provided URL.");
+            }
+
+            var selectedVideo = desiredQualityIndex.HasValue ? videoList.ElementAtOrDefault(desiredQualityIndex.Value) : videoList.LastOrDefault();
+
+            string baseFilePath = Path.Combine(StaticFileLogger.GetLogFolderPath(), selectedVideo.FullName);
+            string filePath = CreateUniqueFilePath(baseFilePath);
+
+            Console.WriteLine("Downloading...");
+            StaticFileLogger.LogInformation($"Downloading video from URL: {videoUrl}");
+            byte[] videoBytes = selectedVideo.GetBytes();
+            File.WriteAllBytes(filePath, videoBytes);
+            Console.WriteLine("Download completed.");
+            StaticFileLogger.LogInformation($"Download completed: {filePath}");
+
+            if (mode == "--mp3")
+            {
+                VideoConverter.ConvertToMp3(filePath);
+            }
         }
-
-        var youTube = YouTube.Default;
-        var videos = youTube.GetAllVideos(videoUrl);
-        var videoList = videos.Where(v => v.AdaptiveKind == AdaptiveKind.Video || v.AdaptiveKind == AdaptiveKind.None).ToList();
-
-        var selectedVideo = desiredQualityIndex.HasValue ? videoList.ElementAtOrDefault(desiredQualityIndex.Value) : videoList.LastOrDefault();
-
-        string baseFilePath = Path.Combine(ConsoleOutputSaver.GetFolderPath(), selectedVideo.FullName);
-        string filePath = CreateUniqueFilePath(baseFilePath);
-
-        Console.WriteLine("Downloading...");
-        byte[] videoBytes = selectedVideo.GetBytes();
-        File.WriteAllBytes(filePath, videoBytes);
-        Console.WriteLine("Download completed.");
-        ConsoleOutputSaver.SaveOutput($"Downloaded video: {filePath}");
-
-        if (mode == "--mp3")
+        catch (Exception ex)
         {
-            VideoConverter.ConvertToMp3(filePath);
+            string errorMessage = $"Failed to download video {videoUrl}: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -46,6 +62,12 @@ public static class YTDownloader
             var youTube = YouTube.Default;
             var videos = youTube.GetAllVideos(firstVideoUrl);
             var videoList = videos.Where(v => v.AdaptiveKind == AdaptiveKind.Video || v.AdaptiveKind == AdaptiveKind.None).ToList();
+
+            if (!videoList.Any())
+            {
+                Console.WriteLine("No available videos found for the first URL.");
+                return;
+            }
 
             for (int i = 0; i < videoList.Count; i++)
             {
@@ -65,8 +87,9 @@ public static class YTDownloader
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to download video {videoUrl}: {ex.Message}");
-                ConsoleOutputSaver.SaveOutput($"Failed to download video {videoUrl}: {ex.Message}");
+                string errorMessage = $"Failed to download video {videoUrl}: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                StaticFileLogger.LogError(errorMessage);
             }
         });
     }
@@ -75,19 +98,29 @@ public static class YTDownloader
     {
         public static void ConvertToMp3(string filePath)
         {
-            string mp3FilePath = Path.ChangeExtension(filePath, ".mp3");
-            var inputFile = new MediaFile { Filename = filePath };
-            var outputFile = new MediaFile { Filename = mp3FilePath };
-
-            using (var engine = new Engine())
+            try
             {
-                engine.GetMetadata(inputFile);
-                engine.Convert(inputFile, outputFile);
-            }
+                string mp3FilePath = Path.ChangeExtension(filePath, ".mp3");
+                var inputFile = new MediaFile { Filename = filePath };
+                var outputFile = new MediaFile { Filename = mp3FilePath };
 
-            File.Delete(filePath);
-            Console.WriteLine("Conversion to MP3 completed.");
-            ConsoleOutputSaver.SaveOutput($"Converted to MP3: {mp3FilePath}");
+                using (var engine = new Engine())
+                {
+                    engine.GetMetadata(inputFile);
+                    engine.Convert(inputFile, outputFile);
+                }
+
+                File.Delete(filePath);
+                string successMessage = $"Conversion to MP3 completed: {mp3FilePath}";
+                Console.WriteLine(successMessage);
+                StaticFileLogger.LogInformation(successMessage);
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = $"Failed to convert to MP3: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                StaticFileLogger.LogError(errorMessage);
+            }
         }
     }
 

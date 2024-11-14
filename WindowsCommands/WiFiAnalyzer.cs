@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using NativeWifi;
 using WindowsCommands.Commands;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -36,7 +37,7 @@ public static class WiFiAnalyzer
                         );
 
                         Console.WriteLine(networkDetails);
-                        ConsoleOutputSaver.SaveOutput(networkDetails);
+                        StaticFileLogger.LogInformation(networkDetails);
                     }
                 }
             }
@@ -65,19 +66,23 @@ public static class WiFiAnalyzer
                     Wlan.WlanConnectionMode connectionMode = Wlan.WlanConnectionMode.Profile;
                     Wlan.Dot11BssType bssType = Wlan.Dot11BssType.Infrastructure;
                     wlanIface.Connect(connectionMode, bssType, profileName);
-                    Console.WriteLine("Connecting to network: " + targetSsid);
+                    string connectingMessage = "Connecting to network: " + targetSsid;
+                    Console.WriteLine(connectingMessage);
+                    StaticFileLogger.LogInformation(connectingMessage);
 
                     if (wlanIface.InterfaceState == Wlan.WlanInterfaceState.Connected &&
                         GetStringForSSID(wlanIface.CurrentConnection.wlanAssociationAttributes.dot11Ssid) ==
                         targetSsid)
                     {
-                        Console.WriteLine("Successfully connected to network: " + targetSsid);
-                        ConsoleOutputSaver.SaveOutput("Successfully connected to network: " + targetSsid);
+                        string successMessage = "Successfully connected to network: " + targetSsid;
+                        Console.WriteLine(successMessage);
+                        StaticFileLogger.LogInformation(successMessage);
                     }
                     else
                     {
-                        Console.WriteLine("Failed to connect to network: " + targetSsid);
-                        ConsoleOutputSaver.SaveOutput("Failed to connect to network: " + targetSsid);
+                        string failureMessage = "Failed to connect to network: " + targetSsid;
+                        Console.WriteLine(failureMessage);
+                        StaticFileLogger.LogError(failureMessage);
                     }
                 }
             }

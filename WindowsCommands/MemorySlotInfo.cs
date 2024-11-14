@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -6,41 +7,63 @@ public static class MemorySlotInfo
 {
     public static void PrintMemorySlots()
     {
-        var memorySlots = GetMemorySlots();
-
-        foreach (var slot in memorySlots)
+        try
         {
-            Console.WriteLine($"Tag: {slot.Tag}");
-            Console.WriteLine($"Model: {slot.Model}");
-            Console.WriteLine($"Size: {slot.Size}");
-            Console.WriteLine($"Device: {slot.Device}");
-            Console.WriteLine($"Bank: {slot.Bank}");
-            Console.WriteLine();
+            var memorySlots = GetMemorySlots();
+
+            foreach (var slot in memorySlots)
+            {
+                string slotInfo = $"Tag: {slot.Tag}\n" +
+                                  $"Model: {slot.Model}\n" +
+                                  $"Size: {slot.Size}\n" +
+                                  $"Device: {slot.Device}\n" +
+                                  $"Bank: {slot.Bank}\n";
+                Console.WriteLine(slotInfo);
+                StaticFileLogger.LogInformation(slotInfo);
+            }
+        }
+        catch (Exception e)
+        {
+            string errorMessage = "An error occurred while printing memory slots: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
-    
+
     public static List<MemorySlot> GetMemorySlots()
     {
-        var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
         var memorySlots = new List<MemorySlot>();
 
-        foreach (ManagementObject queryObj in searcher.Get())
+        try
         {
-            var memorySlot = new MemorySlot
-            {
-                Tag = queryObj["Tag"].ToString(),
-                Model = $"{queryObj["ConfiguredClockSpeed"]} Mhz {queryObj["Manufacturer"]} {queryObj["PartNumber"]}",
-                Size = $"{Convert.ToInt64(queryObj["Capacity"]) / (1024 * 1024)} Mb",
-                Device = queryObj["DeviceLocator"].ToString(),
-                Bank = queryObj["BankLabel"].ToString()
-            };
+            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PhysicalMemory");
 
-            memorySlots.Add(memorySlot);
+            foreach (ManagementObject queryObj in searcher.Get())
+            {
+                var memorySlot = new MemorySlot
+                {
+                    Tag = queryObj["Tag"].ToString(),
+                    Model = $"{queryObj["ConfiguredClockSpeed"]} Mhz {queryObj["Manufacturer"]} {queryObj["PartNumber"]}",
+                    Size = $"{Convert.ToInt64(queryObj["Capacity"]) / (1024 * 1024)} Mb",
+                    Device = queryObj["DeviceLocator"].ToString(),
+                    Bank = queryObj["BankLabel"].ToString()
+                };
+
+                memorySlots.Add(memorySlot);
+            }
+
+            StaticFileLogger.LogInformation("Successfully retrieved memory slots information.");
+        }
+        catch (Exception e)
+        {
+            string errorMessage = "An error occurred while getting memory slots: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
 
         return memorySlots;
     }
-    
+
     public class MemorySlot
     {
         public string Tag { get; set; }

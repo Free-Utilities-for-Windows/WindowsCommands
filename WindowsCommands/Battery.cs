@@ -1,4 +1,5 @@
 ﻿using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -13,16 +14,24 @@ public static class Battery
 
             foreach (ManagementObject item in searcher.Get())
             {
-                Console.WriteLine($"Design voltage: {item["DesignVoltage"]} mV");
-                Console.WriteLine(
-                    $"Estimated charge remaining: {item["EstimatedChargeRemaining"]}%");
-                Console.WriteLine(
-                    $"Battery status: {(BatteryStatus)(ushort)item["BatteryStatus"]}");
+                string designVoltage = $"Design voltage: {item["DesignVoltage"]} mV";
+                string estimatedCharge = $"Estimated charge remaining: {item["EstimatedChargeRemaining"]}%";
+                string batteryStatus = $"Battery status: {(BatteryStatus)(ushort)item["BatteryStatus"]}";
+
+                Console.WriteLine(designVoltage);
+                Console.WriteLine(estimatedCharge);
+                Console.WriteLine(batteryStatus);
+
+                StaticFileLogger.LogInformation(designVoltage);
+                StaticFileLogger.LogInformation(estimatedCharge);
+                StaticFileLogger.LogInformation(batteryStatus);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 

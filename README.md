@@ -43,7 +43,9 @@ The application currently supports the following commands:
 
 ** The `Download images from a specified URL` command saves the images to the `My Pictures` folder.
 *** The `Get temperature` command may not work on many systems due to the hardware support. 
-**** The `Download YouTube videos and optionally convert to MP3` command works correctly only with a specific video quality (1: 360p Mp4).
+**** The Download YouTube videos and optionally convert to MP3 command works correctly only with a specific video quality (1: 360p Mp4). Currently, this command is not working.
+
+All results are logged and saved to a folder named WindowsCommands in the My Documents directory.
 
 Many commands come with its own set of options that allow you to customize the command's behavior.
 

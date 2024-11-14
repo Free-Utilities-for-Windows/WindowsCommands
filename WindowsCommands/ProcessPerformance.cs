@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -53,13 +51,29 @@ public class ProcessPerformanceCollector
                 }
 
                 performances.Add(performance);
+
+                string performanceInfo = $"Process: {performance.Name}\n" +
+                                         $"ProcTime: {performance.ProcTime}%\n" +
+                                         $"IOps: {performance.IOps}\n" +
+                                         $"IObsRead: {performance.IObsRead} MB\n" +
+                                         $"IObsWrite: {performance.IObsWrite} MB\n" +
+                                         $"TotalTime: {performance.TotalTime}\n" +
+                                         $"UserTime: {performance.UserTime}\n" +
+                                         $"PrivTime: {performance.PrivTime}\n" +
+                                         $"WorkingSet: {performance.WorkingSet} MB\n" +
+                                         $"PeakWorkingSet: {performance.PeakWorkingSet} MB\n" +
+                                         $"PageMemory: {performance.PageMemory} MB\n" +
+                                         $"Threads: {performance.Threads}\n" +
+                                         $"Handles: {performance.Handles}\n" +
+                                         $"RunTime: {performance.RunTime}\n";
+                StaticFileLogger.LogInformation(performanceInfo);
             }
         }
 
         return performances.OrderByDescending(p => p.ProcTime).ThenByDescending(p => p.IOps)
             .ThenByDescending(p => p.TotalTime.TotalMilliseconds).ToList();
     }
-    
+
     public class ProcessPerformance
     {
         public string Name { get; set; }

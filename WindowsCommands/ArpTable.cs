@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -42,13 +43,17 @@ public static class ArpTable
                         continue;
                     }
 
-                    Console.WriteLine($"IP: {ip}, MAC: {mac}, Type: {type}");
+                    string logMessage = $"IP: {ip}, MAC: {mac}, Type: {type}";
+                    Console.WriteLine(logMessage);
+                    StaticFileLogger.LogInformation(logMessage);
                 }
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 }

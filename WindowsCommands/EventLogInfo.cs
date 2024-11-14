@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -13,26 +14,41 @@ public static class EventLogInfo
             {
                 try
                 {
-                    Console.WriteLine("\n-----------------------------------------");
-                    Console.WriteLine("Log Name: {0}", log.Log);
-                    Console.WriteLine("Record Count: {0}", log.Entries.Count);
+                    string logInfo = $"\n-----------------------------------------\n" +
+                                     $"Log Name: {log.Log}\n" +
+                                     $"Record Count: {log.Entries.Count}";
+                    Console.WriteLine(logInfo);
+                    StaticFileLogger.LogInformation(logInfo);
                 }
                 catch (System.Security.SecurityException)
                 {
-                    Console.WriteLine("Failed to access log: {0}", log.Log);
+                    string errorMessage = $"Failed to access log: {log.Log}";
+                    Console.WriteLine(errorMessage);
+                    StaticFileLogger.LogError(errorMessage);
                 }
             }
         }
         else
         {
-            EventLog log = new EventLog(logName);
-
-            foreach (EventLogEntry entry in log.Entries)
+            try
             {
-                Console.WriteLine("\n-----------------------------------------");
-                Console.WriteLine("Time Created: {0}", entry.TimeGenerated);
-                Console.WriteLine("Level: {0}", entry.EntryType);
-                Console.WriteLine("Message: {0}", entry.Message);
+                EventLog log = new EventLog(logName);
+
+                foreach (EventLogEntry entry in log.Entries)
+                {
+                    string entryInfo = $"\n-----------------------------------------\n" +
+                                       $"Time Created: {entry.TimeGenerated}\n" +
+                                       $"Level: {entry.EntryType}\n" +
+                                       $"Message: {entry.Message}";
+                    Console.WriteLine(entryInfo);
+                    StaticFileLogger.LogInformation(entryInfo);
+                }
+            }
+            catch (Exception e)
+            {
+                string errorMessage = $"An error occurred while accessing the event log: {e.Message}";
+                Console.WriteLine(errorMessage);
+                StaticFileLogger.LogError(errorMessage);
             }
         }
     }

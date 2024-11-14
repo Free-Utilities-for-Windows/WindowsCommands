@@ -1,4 +1,6 @@
-﻿namespace WindowsCommands;
+﻿using WindowsCommands.Logger;
+
+namespace WindowsCommands;
 
 using System;
 using System.Management;
@@ -13,25 +15,31 @@ public static class NetworkAdapterInformation
 
             foreach (ManagementObject obj in searcher.Get())
             {
-                Console.WriteLine("Description: {0}", obj["Description"]);
-                Console.WriteLine("DHCPEnabled: {0}", obj["DHCPEnabled"]);
-                Console.WriteLine("DHCPLeaseObtained: {0}", ConvertToDateTime(obj["DHCPLeaseObtained"]));
-                Console.WriteLine("DHCPLeaseExpires: {0}", ConvertToDateTime(obj["DHCPLeaseExpires"]));
-                Console.WriteLine("DHCPServer: {0}", obj["DHCPServer"]);
-                Console.WriteLine("IPAddress: {0}", String.Join(", ", (string[])obj["IPAddress"]));
-                Console.WriteLine("DefaultIPGateway: {0}", String.Join(", ", (string[])obj["DefaultIPGateway"]));
-                Console.WriteLine("IPSubnet: {0}", String.Join(", ", (string[])obj["IPSubnet"]));
-                Console.WriteLine("MACAddress: {0}", obj["MACAddress"]);
-                Console.WriteLine("\n-----------------------------------------");
+                string adapterInfo = $"Description: {obj["Description"]}\n" +
+                                     $"DHCPEnabled: {obj["DHCPEnabled"]}\n" +
+                                     $"DHCPLeaseObtained: {ConvertToDateTime(obj["DHCPLeaseObtained"])}\n" +
+                                     $"DHCPLeaseExpires: {ConvertToDateTime(obj["DHCPLeaseExpires"])}\n" +
+                                     $"DHCPServer: {obj["DHCPServer"]}\n" +
+                                     $"IPAddress: {String.Join(", ", (string[])obj["IPAddress"])}\n" +
+                                     $"DefaultIPGateway: {String.Join(", ", (string[])obj["DefaultIPGateway"])}\n" +
+                                     $"IPSubnet: {String.Join(", ", (string[])obj["IPSubnet"])}\n" +
+                                     $"MACAddress: {obj["MACAddress"]}\n" +
+                                     "\n-----------------------------------------";
+                Console.WriteLine(adapterInfo);
+                StaticFileLogger.LogInformation(adapterInfo);
             }
         }
         catch (ManagementException e)
         {
-            Console.WriteLine("An error occurred while querying for WMI data: " + e.Message);
+            string errorMessage = "An error occurred while querying for WMI data: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -44,9 +52,11 @@ public static class NetworkAdapterInformation
                 return ManagementDateTimeConverter.ToDateTime(unconvertedTime.ToString());
             }
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
-            Console.WriteLine("An error occurred while converting time: " + e.Message);
+            string errorMessage = "An error occurred while converting time: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
         return DateTime.MinValue;
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -23,7 +24,7 @@ public static class UserSessionQuery
             };
 
             var process = Process.Start(processStartInfo);
-            var output = process.StandardOutput.ReadToEnd();
+            var output = await process.StandardOutput.ReadToEndAsync();
             process.WaitForExit();
 
             if (!string.IsNullOrEmpty(output))
@@ -58,13 +59,16 @@ public static class UserSessionQuery
 
             foreach (var userSession in users)
             {
-                Console.WriteLine(
-                    $"User: {userSession.User}, Session: {userSession.Session}, ID: {userSession.ID}, Status: {userSession.Status}, IdleTime: {userSession.IdleTime}, LogonTime: {userSession.LogonTime}");
+                string userSessionInfo = $"User: {userSession.User}, Session: {userSession.Session}, ID: {userSession.ID}, Status: {userSession.Status}, IdleTime: {userSession.IdleTime}, LogonTime: {userSession.LogonTime}";
+                Console.WriteLine(userSessionInfo);
+                StaticFileLogger.LogInformation(userSessionInfo);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            string errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 

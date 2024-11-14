@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -13,17 +14,20 @@ public static class DriverInfo
 
             foreach (ManagementObject wmi_HD in searcher.Get())
             {
-                Console.WriteLine("Driver Provider Name: {0}", wmi_HD["DriverProviderName"]);
-                Console.WriteLine("Friendly Name: {0}", wmi_HD["FriendlyName"]);
-                Console.WriteLine("Description: {0}", wmi_HD["Description"]);
-                Console.WriteLine("Driver Version: {0}", wmi_HD["DriverVersion"]);
-                Console.WriteLine("Driver Date: {0}", wmi_HD["DriverDate"]);
-                Console.WriteLine();
+                string driverInfo = $"Driver Provider Name: {wmi_HD["DriverProviderName"]}\n" +
+                                    $"Friendly Name: {wmi_HD["FriendlyName"]}\n" +
+                                    $"Description: {wmi_HD["Description"]}\n" +
+                                    $"Driver Version: {wmi_HD["DriverVersion"]}\n" +
+                                    $"Driver Date: {wmi_HD["DriverDate"]}\n";
+                Console.WriteLine(driverInfo);
+                StaticFileLogger.LogInformation(driverInfo);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 }

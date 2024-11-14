@@ -1,6 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
+﻿using System.Diagnostics;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -20,7 +19,9 @@ public static class NetworkUtilization
             var instanceNames = category.GetInstanceNames();
             if (instanceNames.Length == 0)
             {
-                Console.WriteLine("No network interfaces found.");
+                string noInterfacesMessage = "No network interfaces found.";
+                Console.WriteLine(noInterfacesMessage);
+                StaticFileLogger.LogInformation(noInterfacesMessage);
                 return;
             }
 
@@ -46,27 +47,31 @@ public static class NetworkUtilization
                 
                 float networkUtilization = MathF.Round(averageTransferRate / 1000000000 * 100, 2);
 
-                Console.WriteLine($"Network Interface: {instanceName}");
+                string utilizationMessage = $"Network Interface: {instanceName}\n";
 
                 if (networkUtilization > CriticalThreshold)
                 {
-                    Console.WriteLine($"CRITICAL: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s");
+                    utilizationMessage += $"CRITICAL: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s";
                 }
                 else if (networkUtilization > WarningThreshold)
                 {
-                    Console.WriteLine($"WARNING: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s");
+                    utilizationMessage += $"WARNING: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s";
                 }
                 else
                 {
-                    Console.WriteLine($"OK: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s");
+                    utilizationMessage += $"OK: {networkUtilization}% Network utilization, {averageTransferRate:N0} b/s";
                 }
 
+                Console.WriteLine(utilizationMessage);
+                StaticFileLogger.LogInformation(utilizationMessage);
                 Console.WriteLine();
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            string errorMessage = $"An error occurred: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -123,18 +124,40 @@ public static class Sha256Hasher
 
     public static string ComputeHash(string input)
     {
-        var data = Preprocessing(input);
-        Hash(data);
-        StringBuilder sb = new StringBuilder();
-        foreach (var part in _squareRoot)
+        try
         {
-            sb.AppendFormat("{0:x8}", part);
+            var data = Preprocessing(input);
+            Hash(data);
+            StringBuilder sb = new StringBuilder();
+            foreach (var part in _squareRoot)
+            {
+                sb.AppendFormat("{0:x8}", part);
+            }
+            string hash = sb.ToString();
+            StaticFileLogger.LogInformation($"Computed SHA-256 hash for input '{input}': {hash}");
+            return hash;
         }
-        return sb.ToString();
+        catch (Exception ex)
+        {
+            string errorMessage = $"An error occurred while computing SHA-256 hash: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
+            return null;
+        }
     }
-    
+
     public static void WriteHashToFile(string filePath, string hash)
     {
-        File.WriteAllText(filePath, hash);
+        try
+        {
+            File.WriteAllText(filePath, hash);
+            StaticFileLogger.LogInformation($"Hash written to file: {filePath}");
+        }
+        catch (Exception ex)
+        {
+            string errorMessage = $"An error occurred while writing hash to file: {ex.Message}";
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Management;
+using WindowsCommands.Logger;
 
 namespace WindowsCommands;
 
@@ -17,9 +18,11 @@ public static class MemoryInformation
             var usedPhysicalMemory = totalMemory - availablePhysicalMemory;
             var physicalMemoryUsedPercent = usedPhysicalMemory / totalMemory * 100;
 
-            Console.WriteLine($"Total Physical Memory: {totalMemory} MB");
-            Console.WriteLine($"Used Physical Memory: {usedPhysicalMemory} MB");
-            Console.WriteLine($"Used Physical Memory: {physicalMemoryUsedPercent} %");
+            string memoryInfo = $"Total Physical Memory: {totalMemory} MB\n" +
+                                $"Used Physical Memory: {usedPhysicalMemory} MB\n" +
+                                $"Used Physical Memory: {physicalMemoryUsedPercent} %";
+            Console.WriteLine(memoryInfo);
+            StaticFileLogger.LogInformation(memoryInfo);
 
             var processes = Process.GetProcesses();
             var totalWorkingSet = 0L;
@@ -31,8 +34,10 @@ public static class MemoryInformation
                 totalPagedMemorySize += process.PagedMemorySize64;
             }
 
-            Console.WriteLine($"Total Working Set: {totalWorkingSet / 1024 / 1024} MB");
-            Console.WriteLine($"Total Paged Memory Size: {totalPagedMemorySize / 1024 / 1024} MB");
+            string processMemoryInfo = $"Total Working Set: {totalWorkingSet / 1024 / 1024} MB\n" +
+                                       $"Total Paged Memory Size: {totalPagedMemorySize / 1024 / 1024} MB";
+            Console.WriteLine(processMemoryInfo);
+            StaticFileLogger.LogInformation(processMemoryInfo);
 
             var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
             foreach (ManagementObject obj in searcher.Get())
@@ -53,22 +58,25 @@ public static class MemoryInformation
                 ulong memVirtUse = totalVirtualMemorySize - freeVirtualMemory;
                 double memVirtUseProc = (double)memVirtUse / totalVirtualMemorySize * 100;
 
-                Console.WriteLine($"");
-                Console.WriteLine($"In GB");
-                Console.WriteLine($"MemoryAll: {totalVisibleMemorySize / 1024.0 / 1024.0:0.00} GB");
-                Console.WriteLine($"MemoryUse: {memUse / 1024.0 / 1024.0:0.00} GB");
-                Console.WriteLine($"MemoryUseProc: {memUseProc:0.00} %");
-                Console.WriteLine($"PageSize: {pageSize / 1024.0 / 1024.0:0.00} GB");
-                Console.WriteLine($"PageUse: {pageUse / 1024.0 / 1024.0:0.00} GB");
-                Console.WriteLine($"PageUseProc: {pageUseProc:0.00} %");
-                Console.WriteLine($"MemoryVirtAll: {totalVirtualMemorySize / 1024.0 / 1024.0:0.00} GB");
-                Console.WriteLine($"MemoryVirtUse: {memVirtUse / 1024.0 / 1024.0:0.00} GB");
-                Console.WriteLine($"MemoryVirtUseProc: {memVirtUseProc:0.00} %");
+                string detailedMemoryInfo = $"\nIn GB\n" +
+                                            $"MemoryAll: {totalVisibleMemorySize / 1024.0 / 1024.0:0.00} GB\n" +
+                                            $"MemoryUse: {memUse / 1024.0 / 1024.0:0.00} GB\n" +
+                                            $"MemoryUseProc: {memUseProc:0.00} %\n" +
+                                            $"PageSize: {pageSize / 1024.0 / 1024.0:0.00} GB\n" +
+                                            $"PageUse: {pageUse / 1024.0 / 1024.0:0.00} GB\n" +
+                                            $"PageUseProc: {pageUseProc:0.00} %\n" +
+                                            $"MemoryVirtAll: {totalVirtualMemorySize / 1024.0 / 1024.0:0.00} GB\n" +
+                                            $"MemoryVirtUse: {memVirtUse / 1024.0 / 1024.0:0.00} GB\n" +
+                                            $"MemoryVirtUseProc: {memVirtUseProc:0.00} %";
+                Console.WriteLine(detailedMemoryInfo);
+                StaticFileLogger.LogInformation(detailedMemoryInfo);
             }
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
         }
     }
 
@@ -76,9 +84,8 @@ public static class MemoryInformation
     {
         try
         {
-            var cmd = new System.Management.ManagementObjectSearcher(
-                "SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
-            System.Management.ManagementObjectCollection collection = cmd.Get();
+            var cmd = new ManagementObjectSearcher("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
+            ManagementObjectCollection collection = cmd.Get();
             foreach (var mo in collection)
             {
                 return (float.Parse(mo["TotalPhysicalMemory"].ToString()) / 1024 / 1024);
@@ -88,7 +95,9 @@ public static class MemoryInformation
         }
         catch (Exception e)
         {
-            Console.WriteLine("An error occurred: " + e.Message);
+            string errorMessage = "An error occurred: " + e.Message;
+            Console.WriteLine(errorMessage);
+            StaticFileLogger.LogError(errorMessage);
             return 0;
         }
     }
